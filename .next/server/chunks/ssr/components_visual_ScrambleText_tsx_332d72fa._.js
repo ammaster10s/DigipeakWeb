@@ -1,0 +1,3 @@
+module.exports=[19481,a=>{"use strict";var b=a.i(87924),c=a.i(72131);let d="#$%&*+<>?/\\0123456789";function e({text:a,className:e}){let[f,g]=(0,c.useState)(a.replace(/./g," "));return(0,c.useEffect)(()=>{let b,c=a.split(""),e=c.length,f=0,h=()=>{let a=Math.min(1,f/(e+8)),i=Math.floor(a*e);g(c.map((a,b)=>b<i||" "===a?a:.5>Math.random()?d[Math.floor(Math.random()*d.length)]:a).join("")),f+=1,a<1&&(b=requestAnimationFrame(h))};return b=requestAnimationFrame(h),()=>cancelAnimationFrame(b)},[a]),(0,b.jsx)("p",{className:e,children:f})}a.s(["ScrambleText",()=>e])}];
+
+//# sourceMappingURL=components_visual_ScrambleText_tsx_332d72fa._.js.map

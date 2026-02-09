@@ -1,0 +1,7 @@
+{
+  "/page": "app/page.js",
+  "/privacy/page": "app/privacy/page.js",
+  "/prj-3ds/page": "app/prj-3ds/page.js",
+  "/prj-cl/page": "app/prj-cl/page.js",
+  "/tos/page": "app/tos/page.js"
+}
