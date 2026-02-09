@@ -1,9 +1,9 @@
 {
-  "/_not-found/page": "app/_not-found/page.js",
   "/page": "app/page.js",
   "/privacy/page": "app/privacy/page.js",
   "/prj-3ds/page": "app/prj-3ds/page.js",
   "/prj-cl/page": "app/prj-cl/page.js",
   "/prj-gt/page": "app/prj-gt/page.js",
-  "/prj-mrt/page": "app/prj-mrt/page.js"
+  "/prj-mrt/page": "app/prj-mrt/page.js",
+  "/tos/page": "app/tos/page.js"
 }

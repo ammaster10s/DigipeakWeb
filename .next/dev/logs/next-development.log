@@ -1,14 +1,4 @@
-[00:00:01.353] Server  LOG     ✓ Ready in 996ms
-[00:00:03.098] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:01:18.460] Server  LOG     ✓ Compiled in 222ms
-[00:01:33.262] Server  ERROR   ⨯ "The requested resource isn't a valid image for" "/drone-ghost-perspective.jpeg" "received" null
-[00:01:33.262] Server  ERROR   ⨯ "The requested resource isn't a valid image for" "/drone-ghost-ortho.jpeg" "received" null
-[00:04:18.986] Server  LOG     ✓ Compiled in 67ms
-[00:04:34.063] Server  LOG     ✓ Compiled in 135ms
-[00:04:45.827] Server  LOG     ✓ Compiled in 230ms
-[00:05:03.094] Server  LOG     ✓ Compiled in 13ms
-[00:05:12.539] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:08:36.622] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:10:58.819] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:13:30.101] Server  LOG     ✓ Compiled in 98ms
-[00:13:59.402] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:08.106] Server  LOG     ✓ Ready in 5.8s
+[00:00:14.846] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:48.475] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:52.865] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
