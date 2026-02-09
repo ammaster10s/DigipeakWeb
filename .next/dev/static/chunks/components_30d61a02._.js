@@ -315,6 +315,7 @@ __turbopack_context__.s([
     ()=>RootShell
 ]);
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/client/app-dir/link.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/framer-motion/dist/es/render/components/motion/proxy.mjs [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$components$2f$AnimatePresence$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/framer-motion/dist/es/components/AnimatePresence/index.mjs [app-client] (ecmascript)");
@@ -322,6 +323,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$boot$2f$BootLo
 ;
 var _s = __turbopack_context__.k.signature();
 "use client";
+;
 ;
 ;
 ;
@@ -336,12 +338,12 @@ function RootShell({ children }) {
                     onComplete: ()=>setBootComplete(true)
                 }, void 0, false, {
                     fileName: "[project]/components/RootShell.tsx",
-                    lineNumber: 14,
+                    lineNumber: 15,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/components/RootShell.tsx",
-                lineNumber: 12,
+                lineNumber: 13,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -364,30 +366,35 @@ function RootShell({ children }) {
                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                             className: "mx-auto flex max-w-6xl items-center justify-between px-6 py-3 text-sm md:text-base tracking-[0.22em]",
                             children: [
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "font-mono uppercase text-zinc-200",
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
+                                    href: "/",
+                                    className: "font-mono uppercase text-zinc-200 transition-colors hover:text-red-300",
                                     children: "DIGIPEAK // OPS-HUD"
                                 }, void 0, false, {
                                     fileName: "[project]/components/RootShell.tsx",
-                                    lineNumber: 27,
+                                    lineNumber: 28,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("nav", {
                                     className: "flex gap-6 font-mono text-xs md:text-sm uppercase",
                                     children: [
                                         {
-                                            label: "SYS_GO",
-                                            href: "/"
+                                            label: "PRJ_GT",
+                                            href: "/prj-gt"
                                         },
                                         {
                                             label: "PRJ_CL",
                                             href: "/prj-cl"
                                         },
                                         {
+                                            label: "MOR_AI",
+                                            href: "/prj-mrt"
+                                        },
+                                        {
                                             label: "LOG_3DS",
                                             href: "/prj-3ds"
                                         }
-                                    ].map((item)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
+                                    ].map((item)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                                             href: item.href,
                                             className: "relative overflow-hidden text-zinc-400 transition-colors duration-150",
                                             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -398,7 +405,7 @@ function RootShell({ children }) {
                                                         children: "["
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/RootShell.tsx",
-                                                        lineNumber: 42,
+                                                        lineNumber: 47,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -406,7 +413,7 @@ function RootShell({ children }) {
                                                         children: item.label
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/RootShell.tsx",
-                                                        lineNumber: 45,
+                                                        lineNumber: 50,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -414,34 +421,34 @@ function RootShell({ children }) {
                                                         children: "]"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/RootShell.tsx",
-                                                        lineNumber: 48,
+                                                        lineNumber: 53,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/RootShell.tsx",
-                                                lineNumber: 41,
+                                                lineNumber: 46,
                                                 columnNumber: 19
                                             }, this)
                                         }, item.label, false, {
                                             fileName: "[project]/components/RootShell.tsx",
-                                            lineNumber: 36,
+                                            lineNumber: 41,
                                             columnNumber: 17
                                         }, this))
                                 }, void 0, false, {
                                     fileName: "[project]/components/RootShell.tsx",
-                                    lineNumber: 30,
+                                    lineNumber: 34,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/components/RootShell.tsx",
-                            lineNumber: 26,
+                            lineNumber: 27,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/components/RootShell.tsx",
-                        lineNumber: 20,
+                        lineNumber: 21,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("main", {
@@ -449,7 +456,7 @@ function RootShell({ children }) {
                         children: children
                     }, void 0, false, {
                         fileName: "[project]/components/RootShell.tsx",
-                        lineNumber: 59,
+                        lineNumber: 64,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("footer", {
@@ -465,7 +472,7 @@ function RootShell({ children }) {
                                             children: "COORDS:"
                                         }, void 0, false, {
                                             fileName: "[project]/components/RootShell.tsx",
-                                            lineNumber: 67,
+                                            lineNumber: 72,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -473,13 +480,13 @@ function RootShell({ children }) {
                                             children: "NANG LAE, CHIANG RAI"
                                         }, void 0, false, {
                                             fileName: "[project]/components/RootShell.tsx",
-                                            lineNumber: 68,
+                                            lineNumber: 73,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/RootShell.tsx",
-                                    lineNumber: 66,
+                                    lineNumber: 71,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -489,7 +496,7 @@ function RootShell({ children }) {
                                             className: "mr-2 status-dot"
                                         }, void 0, false, {
                                             fileName: "[project]/components/RootShell.tsx",
-                                            lineNumber: 73,
+                                            lineNumber: 78,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -497,7 +504,7 @@ function RootShell({ children }) {
                                             children: "STATUS:"
                                         }, void 0, false, {
                                             fileName: "[project]/components/RootShell.tsx",
-                                            lineNumber: 74,
+                                            lineNumber: 79,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -505,13 +512,13 @@ function RootShell({ children }) {
                                             children: "SYSTEM_ARMED"
                                         }, void 0, false, {
                                             fileName: "[project]/components/RootShell.tsx",
-                                            lineNumber: 75,
+                                            lineNumber: 80,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/RootShell.tsx",
-                                    lineNumber: 72,
+                                    lineNumber: 77,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -522,7 +529,7 @@ function RootShell({ children }) {
                                             children: "© 202X DIGIPEAK OPS. ALL SYSTEMS HARDENED."
                                         }, void 0, false, {
                                             fileName: "[project]/components/RootShell.tsx",
-                                            lineNumber: 78,
+                                            lineNumber: 83,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -530,7 +537,7 @@ function RootShell({ children }) {
                                             children: "237/4 หมู่ 5 ตำบล ริมกก อำเภอ เมืองเชียงราย จังหวัด เชียงราย 57100"
                                         }, void 0, false, {
                                             fileName: "[project]/components/RootShell.tsx",
-                                            lineNumber: 81,
+                                            lineNumber: 86,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -540,7 +547,7 @@ function RootShell({ children }) {
                                                     children: "email: digipeak.co@gmail.com"
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/RootShell.tsx",
-                                                    lineNumber: 85,
+                                                    lineNumber: 90,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -548,7 +555,7 @@ function RootShell({ children }) {
                                                     children: "|"
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/RootShell.tsx",
-                                                    lineNumber: 86,
+                                                    lineNumber: 91,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("nav", {
@@ -560,7 +567,7 @@ function RootShell({ children }) {
                                                             children: "PRIVACY"
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/RootShell.tsx",
-                                                            lineNumber: 88,
+                                                            lineNumber: 93,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
@@ -569,48 +576,48 @@ function RootShell({ children }) {
                                                             children: "TOS"
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/RootShell.tsx",
-                                                            lineNumber: 94,
+                                                            lineNumber: 99,
                                                             columnNumber: 19
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/components/RootShell.tsx",
-                                                    lineNumber: 87,
+                                                    lineNumber: 92,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/RootShell.tsx",
-                                            lineNumber: 84,
+                                            lineNumber: 89,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/RootShell.tsx",
-                                    lineNumber: 77,
+                                    lineNumber: 82,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/components/RootShell.tsx",
-                            lineNumber: 65,
+                            lineNumber: 70,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/components/RootShell.tsx",
-                        lineNumber: 64,
+                        lineNumber: 69,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/components/RootShell.tsx",
-                lineNumber: 18,
+                lineNumber: 19,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/components/RootShell.tsx",
-        lineNumber: 11,
+        lineNumber: 12,
         columnNumber: 5
     }, this);
 }

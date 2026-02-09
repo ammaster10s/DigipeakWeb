@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { BootLoader } from "./boot/BootLoader";
@@ -24,16 +25,20 @@ export function RootShell({ children }: { children: React.ReactNode }) {
           transition={{ duration: 0.4, ease: "linear" }}
         >
           <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3 text-sm md:text-base tracking-[0.22em]">
-            <div className="font-mono uppercase text-zinc-200">
+            <Link
+              href="/"
+              className="font-mono uppercase text-zinc-200 transition-colors hover:text-red-300"
+            >
               DIGIPEAK // OPS-HUD
-            </div>
+            </Link>
             <nav className="flex gap-6 font-mono text-xs md:text-sm uppercase">
               {[
-                { label: "SYS_GO", href: "/" },
+                { label: "PRJ_GT", href: "/prj-gt" },
                 { label: "PRJ_CL", href: "/prj-cl" },
+                { label: "MOR_AI", href: "/prj-mrt" },
                 { label: "LOG_3DS", href: "/prj-3ds" },
               ].map((item) => (
-                <a
+                <Link
                   key={item.label}
                   href={item.href}
                   className="relative overflow-hidden text-zinc-400 transition-colors duration-150"
@@ -49,7 +54,7 @@ export function RootShell({ children }: { children: React.ReactNode }) {
                       ]
                     </span>
                   </span>
-                </a>
+                </Link>
               ))}
             </nav>
           </div>

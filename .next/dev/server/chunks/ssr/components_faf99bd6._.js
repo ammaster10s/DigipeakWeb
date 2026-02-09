@@ -144,13 +144,14 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist
 ;
 ;
 const GLYPHS = "#$%&*+<>?/\\0123456789";
-function ScrambleText({ text, className }) {
+function ScrambleText({ text, className, speed = 0.8 }) {
     const [output, setOutput] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(text.replace(/./g, " "));
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
         let frameId;
         const chars = text.split("");
         const total = chars.length;
         let frame = 0;
+        const clampedSpeed = Math.max(0.1, speed);
         const step = ()=>{
             const progress = Math.min(1, frame / (total + 8));
             const revealed = Math.floor(progress * total);
@@ -162,7 +163,7 @@ function ScrambleText({ text, className }) {
                 return ch;
             });
             setOutput(next.join(""));
-            frame += 1;
+            frame += clampedSpeed;
             if (progress < 1) {
                 frameId = requestAnimationFrame(step);
             }
@@ -177,7 +178,7 @@ function ScrambleText({ text, className }) {
         children: output
     }, void 0, false, {
         fileName: "[project]/components/visual/ScrambleText.tsx",
-        lineNumber: 45,
+        lineNumber: 47,
         columnNumber: 10
     }, this);
 }

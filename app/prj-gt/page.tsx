@@ -1,5 +1,5 @@
-import Image from "next/image";
 import { PRJGTSection } from "../../components/sections/PRJGTSection";
+import { DroneImageGallery } from "../../components/visual/DroneImageGallery";
 import { ScrambleText } from "../../components/visual/ScrambleText";
 
 export default function PRJGTPage() {
@@ -7,16 +7,15 @@ export default function PRJGTPage() {
     <div className="flex flex-col gap-10 md:gap-14">
       <header className="space-y-3">
         <p className="font-mono text-xs md:text-sm uppercase tracking-[0.32em] text-red-600">
-          [PRJ-GT] // GHOST TRACKER
+          [PRJ-GT] // GHOST TRACKER BETA 1.0
         </p>
         <ScrambleText
-          text="TACTICAL MISSION CONTROL INTERFACE"
+          text="THE SILENT PREDATOR: AUTONOMOUS THERMAL PURSUIT & TACTICAL SUPERIORITY"
           className="font-mono text-base md:text-lg uppercase tracking-[0.26em] text-zinc-100"
         />
-        <p className="max-w-2xl text-sm md:text-base text-zinc-300">
-          Ghost Tracker is the primary mission interface for tracking, obstacle
-          avoidance, and secure surveillance of high-speed autonomous drones in
-          dense industrial environments.
+        <p className="max-w-3xl text-sm md:text-base text-zinc-300">
+          Redefining tactical autonomy in contested electronic warfare
+          environments.
         </p>
       </header>
 
@@ -24,46 +23,103 @@ export default function PRJGTPage() {
         <div className="space-y-6">
           <div className="grid-border border border-zinc-900 bg-black/80 p-4 md:p-5">
             <h2 className="font-mono text-sm md:text-base uppercase tracking-[0.22em] text-zinc-200">
-              MISSION PROFILE // TACTICAL MAP
+              THE GHOST TRACKER BETA 1.0
             </h2>
             <p className="mt-3 text-sm md:text-base text-zinc-300">
-              The interface renders live ghost tracks of all airborne assets
-              over a minimal tactical map. Every plotted point is time-stamped,
-              encrypted, and cross-checked against obstacle fields in real time.
+              The Ghost Tracker Beta 1.0 is a next-generation Unmanned Aerial
+              System (UAS) engineered for high-stakes operations in contested
+              electronic warfare (EW) environments. Leveraging an advanced Edge
+              AI Processing architecture, the system maintains mission
+              integrity and decision-making capabilities even when completely
+              severed from Remote Control (RC) links and Global Positioning
+              Systems (GPS).
             </p>
           </div>
 
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="grid-border border border-zinc-900 bg-black/80 p-4">
-              <p className="font-mono text-xs uppercase tracking-[0.22em] text-zinc-400">
-                TECHNICAL SHOWCASE // SIGNAL ANALYSIS
+          <div className="grid-border border border-zinc-900 bg-black/80 p-4">
+            <p className="font-mono text-xs uppercase tracking-[0.22em] text-zinc-400">
+              CORE TACTICAL CAPABILITIES
+            </p>
+            <div className="mt-3 space-y-3 text-sm text-zinc-300">
+              <p>
+                <span className="text-zinc-100">
+                  Autonomous Terminal Homing (ATH):
+                </span>{" "}
+                The onboard AI logic enables the system to lock onto and
+                prosecute targets independently during the final approach
+                phase, ensuring mission success without human intervention.
               </p>
-              <p className="mt-2 text-sm text-zinc-300">
-                High-contrast red frequency lines expose latency, jitter, and
-                interference across the control link. Operators see failure
-                modes before they materialize in the field.
+              <p>
+                <span className="text-zinc-100">
+                  Electronic Warfare Resilience:
+                </span>{" "}
+                Designed for total signal denial, the system transitions into
+                "Ghost Mode" upon detecting interference, utilizing on-board
+                processing to bypass traditional jamming methods.
               </p>
-            </div>
-            <div className="grid-border border border-zinc-900 bg-black/80 p-4">
-              <p className="font-mono text-xs uppercase tracking-[0.22em] text-zinc-400">
-                OBSTACLE AVOIDANCE LOGIC
+              <p>
+                <span className="text-zinc-100">
+                  Multi-Spectral Target Acquisition:
+                </span>{" "}
+                By fusing high-definition visual optics with high-sensitivity
+                thermal sensors, the Ghost Tracker identifies heat signatures
+                through total darkness, smoke, or camouflage.
               </p>
-              <p className="mt-2 text-sm text-zinc-300">
-                A full halo of virtual sensors wraps the drone, simulating
-                LIDAR, radar, and optical feeds. Each sector reports risk,
-                clearance, and escape vectors in real time.
+              <p>
+                <span className="text-zinc-100">
+                  Dual-Mission Versatility:
+                </span>{" "}
+                A modular payload system allows operators to toggle between
+                Reusable Mode (tactical drop and return) and Expendable Mode
+                (direct kinetic impact) based on mission requirements.
               </p>
             </div>
           </div>
 
           <div className="grid-border border border-zinc-900 bg-black/80 p-4">
             <p className="font-mono text-xs uppercase tracking-[0.22em] text-zinc-400">
-              MATERIAL VISUALS // PETG-RCF
+              ENGINEERING & TECHNICAL INTEGRATION
+            </p>
+            <div className="mt-3 space-y-3 text-sm text-zinc-300">
+              <p>
+                <span className="text-zinc-100">High-Performance Avionics:</span>{" "}
+                Powered by the most powerful flight controller, supporting the
+                professional ecosystem for industrial-grade reliability.
+              </p>
+              <p>
+                <span className="text-zinc-100">GPS-Denied Navigation:</span>{" "}
+                Integrated with the Optical Flow & LiDAR sensor suite, enabling
+                precise position hold and altitude stability in signal-denied
+                theaters.
+              </p>
+              <p>
+                <span className="text-zinc-100">
+                  Lightweight Durability & Versatility:
+                </span>{" "}
+                The airframe is optimized for weight-sensitive operations,
+                utilizing an AIO board that weighs only 10 grams to maximize
+                payload capacity for tactical loads.
+              </p>
+              <p>
+                <span className="text-zinc-100">Universal Peripheral Support:</span>{" "}
+                The architecture features 7 UART ports, supporting a wide
+                variety of equipment and mission-specific sensors, ensuring the
+                platform can be adapted for diverse tactical requirements.
+              </p>
+            </div>
+          </div>
+
+          <div className="grid-border border border-red-900/60 bg-black/80 p-4">
+            <p className="font-mono text-xs uppercase tracking-[0.22em] text-red-500">
+              DISCLAIMER
             </p>
             <p className="mt-2 text-sm text-zinc-300">
-              The chassis render emphasizes the raw texture of recycled
-              carbon-fiber-reinforced PETG. The visual language is matte,
-              hostile, and unapologetically industrial.
+              Product Development Statement: The technical specifications,
+              autonomous functionalities, and operational capabilities
+              described herein represent the strategic engineering objectives
+              and product development milestones targeted for full realization
+              by 2027. Current iterations serve as Beta prototypes intended for
+              research, iterative testing, and technological validation.
             </p>
           </div>
         </div>
@@ -71,38 +127,20 @@ export default function PRJGTPage() {
         <div className="space-y-6">
           <PRJGTSection />
 
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="grid-border border border-zinc-900 bg-black/80 p-3">
-              <p className="mb-2 font-mono text-[11px] uppercase tracking-[0.22em] text-zinc-400">
-                HIGH-CONTRAST DRONE // ORTHO VIEWS
-              </p>
-              <div className="relative aspect-[4/3] w-full bg-black">
-                <Image
-                  src="/drone-ghost-ortho.jpeg"
-                  alt="High-contrast orthographic views of the DIGIPEAK ghost-tracker drone."
-                  fill
-                  className="object-contain"
-                  sizes="(min-width: 768px) 50vw, 100vw"
-                  priority
-                />
-              </div>
-            </div>
-
-            <div className="grid-border border border-zinc-900 bg-black/80 p-3">
-              <p className="mb-2 font-mono text-[11px] uppercase tracking-[0.22em] text-zinc-400">
-                HIGH-CONTRAST DRONE // PERSPECTIVE
-              </p>
-              <div className="relative aspect-[4/3] w-full bg-black">
-                <Image
-                  src="/drone-ghost-perspective.jpeg"
-                  alt="Perspective render of the DIGIPEAK ghost-tracker drone with antennas and carbon-fiber props."
-                  fill
-                  className="object-contain"
-                  sizes="(min-width: 768px) 50vw, 100vw"
-                />
-              </div>
-            </div>
-          </div>
+          <DroneImageGallery
+            images={[
+              {
+                src: "/drone-ghost-ortho.png",
+                alt: "High-contrast orthographic views of the DIGIPEAK ghost-tracker drone.",
+                label: "HIGH-CONTRAST DRONE // ORTHO VIEWS",
+              },
+              {
+                src: "/drone-ghost-perspective.png",
+                alt: "Perspective render of the DIGIPEAK ghost-tracker drone with antennas and carbon-fiber props.",
+                label: "HIGH-CONTRAST DRONE // PERSPECTIVE",
+              },
+            ]}
+          />
         </div>
       </section>
     </div>

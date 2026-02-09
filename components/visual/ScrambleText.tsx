@@ -7,9 +7,10 @@ const GLYPHS = "#$%&*+<>?/\\0123456789";
 interface ScrambleTextProps {
   text: string;
   className?: string;
+  speed?: number;
 }
 
-export function ScrambleText({ text, className }: ScrambleTextProps) {
+export function ScrambleText({ text, className, speed = 0.8 }: ScrambleTextProps) {
   const [output, setOutput] = useState(text.replace(/./g, " "));
 
   useEffect(() => {
@@ -17,6 +18,7 @@ export function ScrambleText({ text, className }: ScrambleTextProps) {
     const chars = text.split("");
     const total = chars.length;
     let frame = 0;
+    const clampedSpeed = Math.max(0.1, speed);
 
     const step = () => {
       const progress = Math.min(1, frame / (total + 8));
@@ -31,7 +33,7 @@ export function ScrambleText({ text, className }: ScrambleTextProps) {
       });
 
       setOutput(next.join(""));
-      frame += 1;
+      frame += clampedSpeed;
 
       if (progress < 1) {
         frameId = requestAnimationFrame(step);
