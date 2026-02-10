@@ -14,7 +14,7 @@
             <span class="ml-2 text-red-600">SYSTEM_ARMED</span>
           </div>
           <div class="flex flex-col justify-center gap-1 md:items-end">
-            <div class="text-zinc-400">© 202X DIGIPEAK OPS. ALL SYSTEMS HARDENED.</div>
+            <div class="text-zinc-400">© 2026 DIGIPEAK OPS. ALL SYSTEMS HARDENED.</div>
             <div class="text-[10px] md:text-xs normal-case text-zinc-500">
               237/4 หมู่ 5 ตำบล ริมกก อำเภอ เมืองเชียงราย จังหวัด เชียงราย 57100
             </div>
