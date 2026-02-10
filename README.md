@@ -1,46 +1,39 @@
-# DIGIPEAK V1.0 – Anduril-Inspired Interface
+# DIGIPEAK OPS – PHP Edition
 
-Ultra-dark, defense-tech landing interface for DIGIPEAK, built with **Next.js 14 (App Router)**, **Tailwind CSS**, and **Framer Motion**.
+Ultra-dark, defense-tech interface for DIGIPEAK, translated to PHP while keeping the same UI/UX.
 
-## Stack
+## What’s Included
 
-- **Framework**: Next.js 14 (App Router)
-- **Styling**: Tailwind CSS (JetBrains Mono + Inter via `next/font`)
-- **Animation**: Framer Motion
-- **Icons / Visuals**: Lucide React (ready to be wired where needed)
+- **PHP pages** (root): `index.php`, `prj-gt.php`, `prj-cl.php`, `prj-3ds.php`, `prj-mrt.php`, `privacy.php`, `tos.php`.
+- **Shared layout**: [php/partials/head.php](php/partials/head.php), [php/partials/header.php](php/partials/header.php), [php/partials/footer.php](php/partials/footer.php).
+- **Assets**: [php/assets/site.css](php/assets/site.css), [php/assets/site.js](php/assets/site.js).
+- **Images**: [public](public).
 
-## Getting Started
+## Requirements
 
-Install dependencies:
+- PHP 8+ (for running the local server).
 
-```bash
-npm install
-```
+## Run Locally
 
-Run the dev server:
+From the repo root:
 
 ```bash
-npm run dev
+php -S localhost:8000
 ```
 
-Then open `http://localhost:3000` in your browser.
+Open: `http://localhost:8000`
 
-## Current Features
+## Notes
 
-- **Boot-up Loader**: Fullscreen black boot sequence with scrolling hex codes, linear red progress bar, and curtain/glitch-inspired exit. Unmounts after completion.
-- **HUD Navigation**: Fixed ultra-dark top bar with code-name links: `[SYS_GO]`, `[PRJ_CL]`, `[LOG_3DS]`.
-- **Status Footer**: Grid-based footer with location, pulsing **SYSTEM_ARMED** indicator, and hardened copyright line.
-- **Hero / [PRJ-GT] GHOST TRACKER**:
-  - Radar-style surveillance background with rotating sweep.
-  - Monochrome drone silhouette and telemetry overlay.
-  - **Signal Analysis** canvas rendering a red sine wave that reacts to scroll (frequency) and mouse movement (amplitude).
-  - Scramble-text effect on mission headers.
+- Tailwind is loaded via CDN in [php/partials/head.php](php/partials/head.php).
+- The boot loader shows only on the first page visit (session-based).
+- Scramble text is enabled where `data-scramble` is present.
 
-## Next Steps
+## Deploy
 
-- Implement additional modules:
-  - `[PRJ-CL] CODELIFT` (Blueprint / Exploded View SVG)
-  - `[PRJ-3DS] THE FACTORY` (Mass production calculator + comparator slider)
-  - `[PRJ-MRT] MORINTHA LOG` (AI inspection / defect tagging)
-- Build the **CLI-style contact interface** with encrypted-response feedback.
+Upload these to your PHP host (cPanel or similar):
+
+- Root PHP pages (listed above)
+- [php](php) folder
+- [public](public) folder
 
