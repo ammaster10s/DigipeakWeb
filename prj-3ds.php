@@ -6,58 +6,90 @@ include __DIR__ . "/php/partials/header.php";
 
 <div class="flex flex-col gap-10 md:gap-14">
   <header class="space-y-3">
-    <p class="font-mono text-xs md:text-sm uppercase tracking-[0.32em] text-red-600">
-      [PRJ-3DS] // 3D PRINTING SERVICE
+    <p class="font-mono text-xs md:text-sm uppercase tracking-[0.32em] text-orange-500">
+      [KAIKLOM PRINTING] // 3D PRINTING SERVICE
     </p>
     <p
       class="font-mono text-base md:text-lg uppercase tracking-[0.26em] text-zinc-100"
       data-scramble
       data-scramble-speed="0.8"
     >
-      THE FACTORY // PRECISION ADDITIVE
+      SERVICE SPECIFICATIONS
     </p>
     <p class="max-w-2xl text-sm md:text-base text-zinc-300">
-      Industrial-grade printing for rCF, PETG-CF, and nylon components, tuned for repeatability
-      under thermal and mechanical stress.
+      Professional 3D printing services with a full range of materials from PLA to carbon fiber composites.
+      Submit your files, receive expert consultation, and get high-quality parts delivered to your door.
     </p>
   </header>
 
   <section class="space-y-8">
     <div class="grid-border border border-zinc-900 bg-black/80 p-4 md:p-5">
       <p class="font-mono text-xs uppercase tracking-[0.22em] text-zinc-400">
-        MACHINE SPECS // MATERIAL PERFORMANCE
+        SERVICE SPECIFICATIONS // MATERIAL OPTIONS
       </p>
       <div class="mt-4 overflow-x-auto">
         <table class="w-full border-collapse font-mono text-xs md:text-sm uppercase tracking-[0.18em]">
           <thead>
             <tr class="bg-black/60 text-zinc-300">
               <th class="border border-zinc-800 px-3 py-2 text-left">MATERIAL</th>
-              <th class="border border-zinc-800 px-3 py-2 text-left">STIFFNESS</th>
-              <th class="border border-zinc-800 px-3 py-2 text-left">HEAT RESIST.</th>
-              <th class="border border-zinc-800 px-3 py-2 text-left">SURFACE</th>
+              <th class="border border-zinc-800 px-3 py-2 text-left">PROPERTIES</th>
+              <th class="border border-zinc-800 px-3 py-2 text-left">PRICE</th>
+              <th class="border border-zinc-800 px-3 py-2 text-left">USE CASE</th>
             </tr>
           </thead>
           <tbody class="text-zinc-200">
             <tr>
-              <td class="border border-zinc-800 px-3 py-2">PETG-CF</td>
-              <td class="border border-zinc-800 px-3 py-2">HIGH</td>
-              <td class="border border-zinc-800 px-3 py-2">80–90°C</td>
-              <td class="border border-zinc-800 px-3 py-2">MATTE / TECHNICAL</td>
+              <td class="border border-zinc-800 px-3 py-2">PLA</td>
+              <td class="border border-zinc-800 px-3 py-2">High-detail visual models</td>
+              <td class="border border-zinc-800 px-3 py-2 text-orange-500">3 ฿/G</td>
+              <td class="border border-zinc-800 px-3 py-2">Prototypes, Display</td>
             </tr>
             <tr>
-              <td class="border border-zinc-800 px-3 py-2">PETG-RCF</td>
-              <td class="border border-zinc-800 px-3 py-2">VERY HIGH</td>
-              <td class="border border-zinc-800 px-3 py-2">90–100°C</td>
-              <td class="border border-zinc-800 px-3 py-2">RAW / RECYCLED TEXTURE</td>
+              <td class="border border-zinc-800 px-3 py-2">PETG</td>
+              <td class="border border-zinc-800 px-3 py-2">Durable, UV-stable outdoor ready</td>
+              <td class="border border-zinc-800 px-3 py-2 text-orange-500">2.5 ฿/G</td>
+              <td class="border border-zinc-800 px-3 py-2">Outdoor, Functional</td>
             </tr>
             <tr>
-              <td class="border border-zinc-800 px-3 py-2">NYLON</td>
-              <td class="border border-zinc-800 px-3 py-2">FLEX / TOUGH</td>
-              <td class="border border-zinc-800 px-3 py-2">100–120°C</td>
-              <td class="border border-zinc-800 px-3 py-2">SEMI-MATTE / TECHNICAL</td>
+              <td class="border border-zinc-800 px-3 py-2">ABS / ASA</td>
+              <td class="border border-zinc-800 px-3 py-2">Heat-resistant industrial</td>
+              <td class="border border-zinc-800 px-3 py-2 text-orange-500">4 ฿/G</td>
+              <td class="border border-zinc-800 px-3 py-2">High-temp, Automotive</td>
+            </tr>
+            <tr>
+              <td class="border border-zinc-800 px-3 py-2">CF-INFUSED</td>
+              <td class="border border-zinc-800 px-3 py-2">Ultra-stiff, lightweight</td>
+              <td class="border border-zinc-800 px-3 py-2 text-orange-500">8 ฿/G</td>
+              <td class="border border-zinc-800 px-3 py-2">Aerospace, Racing</td>
+            </tr>
+            <tr>
+              <td class="border border-zinc-800 px-3 py-2">TPU</td>
+              <td class="border border-zinc-800 px-3 py-2">Flexible, shock-absorbing parts</td>
+              <td class="border border-zinc-800 px-3 py-2 text-orange-500">4 ฿/G</td>
+              <td class="border border-zinc-800 px-3 py-2">Gaskets, Dampeners</td>
+            </tr>
+            <tr>
+              <td class="border border-zinc-800 px-3 py-2">MULTI-COLOR</td>
+              <td class="border border-zinc-800 px-3 py-2">Up to 4 colors in a single print</td>
+              <td class="border border-zinc-800 px-3 py-2 text-orange-500">4 ฿/G</td>
+              <td class="border border-zinc-800 px-3 py-2">Branding, Art</td>
             </tr>
           </tbody>
         </table>
+      </div>
+      
+      <div class="mt-6 space-y-2 border-t border-zinc-800 pt-4">
+        <p class="font-mono text-xs uppercase tracking-[0.22em] text-orange-500">How to Order?</p>
+        <div class="grid gap-3 md:grid-cols-2">
+          <div>
+            <p class="font-mono text-[11px] text-zinc-300"><span class="text-orange-500">Submit:</span> Send your .STL / .STEP files via QR Code</p>
+            <p class="font-mono text-[11px] text-zinc-300"><span class="text-orange-500">Consult:</span> Receive material recommendation and price quote</p>
+          </div>
+          <div>
+            <p class="font-mono text-[11px] text-zinc-300"><span class="text-orange-500">Print:</span> High-speed production using OUR industrial tech</p>
+            <p class="font-mono text-[11px] text-zinc-300"><span class="text-orange-500">Ship:</span> Secure packaging and rapid delivery to your door</p>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -105,32 +137,19 @@ include __DIR__ . "/php/partials/header.php";
       </div>
     </div>
 
-    <!-- <div class="grid-border border border-zinc-900 bg-black/80 p-4 md:p-5">
+
+    <div class="grid-border border border-zinc-900 bg-black/80 p-4 md:p-5">
       <p class="font-mono text-xs uppercase tracking-[0.22em] text-zinc-400">
-        VINTAGE RESTORATION // 3D SCAN VS PRINT
-      </p>
-      <p class="mt-3 text-sm text-zinc-300">
-        Side-by-side inspection of scanned geometry and final printed output. Tolerances, wear surfaces,
-        and mounting faces are checked before parts ever touch a chassis.
+        KAIKLOM PROJECT // DESIGN SHOWCASE
       </p>
       <div class="mt-4 grid gap-4 md:grid-cols-2">
-        <div class="flex flex-col gap-2">
-          <span class="font-mono text-[11px] uppercase tracking-[0.18em] text-zinc-400">
-            3D SCAN // POINT CLOUD
-          </span>
-          <div class="flex h-40 items-center justify-center border border-zinc-800 bg-gradient-to-br from-emerald-800/40 via-black to-sky-900/40 text-[11px] text-emerald-200">
-            POINT CLOUD PLACEHOLDER
-          </div>
+        <div class="overflow-hidden border border-zinc-800">
+          <img src="/public/Poster_Kaiklom_1.png" alt="Kaiklom Design Poster 1" class="w-full h-auto object-cover transition-transform hover:scale-105" />
         </div>
-        <div class="flex flex-col gap-2">
-          <span class="font-mono text-[11px] uppercase tracking-[0.18em] text-zinc-400">
-            FINAL PRINTED PART
-          </span>
-          <div class="flex h-40 items-center justify-center border border-zinc-800 bg-gradient-to-br from-zinc-800 via-black to-zinc-900 text-[11px] text-zinc-100">
-            PRINTED PART PLACEHOLDER
-          </div>
+        <div class="overflow-hidden border border-zinc-800">
+          <img src="/public/Poster_Kaiklom_2.png" alt="Kaiklom Design Poster 2" class="w-full h-auto object-cover transition-transform hover:scale-105" />
         </div>
-      </div> -->
+      </div>
     </div>
   </section>
 </div>
