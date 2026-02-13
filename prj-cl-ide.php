@@ -13,7 +13,8 @@ $saved_blocks_xml = ""; // This would be fetched from a database in a real scena
 <script src="https://unpkg.com/blockly/javascript_compressed.js"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
 
-<div class="fixed inset-0 flex flex-col pt-16">
+<!-- IDE Container: Positioned to sit below the site header (z-30) but cover all other content -->
+<div class="fixed inset-0 z-10 flex flex-col pt-16 bg-zinc-950 shadow-2xl" style="width: 100vw; height: 100vh;">
   <!-- IDE Toolbar -->
   <div class="z-20 flex items-center justify-between border-b border-zinc-800 bg-zinc-950/80 px-6 py-3 backdrop-blur-md">
     <div class="flex items-center gap-6">
@@ -221,7 +222,7 @@ $saved_blocks_xml = ""; // This would be fetched from a database in a real scena
         border-right: 1px solid rgba(255,255,255,0.05) !important;
         color: #fff !important;
         padding-top: 10px !important;
-        width: 170px !important;
+        width: 210px !important; /* Increased width significantly to prevent text clipping */
         scrollbar-width: none !important; /* Firefox */
         -ms-overflow-style: none !important;  /* IE and Edge */
       }
@@ -258,6 +259,8 @@ $saved_blocks_xml = ""; // This would be fetched from a database in a real scena
         font-weight: 600 !important;
         color: #94a3b8 !important; 
         margin-left: 8px !important;
+        white-space: nowrap !important; /* Prevent text wrapping/clipping */
+        overflow: visible !important;   /* Ensure text is fully visible */
       }
 
       .blocklyTreeSelected .blocklyTreeLabel {
@@ -345,5 +348,6 @@ $saved_blocks_xml = ""; // This would be fetched from a database in a real scena
       bleIsConnected = isConnected;
   };
 </script>
-
-<?php include __DIR__ . "/php/partials/footer.php"; ?>
+<!-- Note: Site footer is omitted for full-screen IDE experience to prevent layout shifts -->
+</body>
+</html>
