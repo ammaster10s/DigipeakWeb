@@ -58,7 +58,7 @@ $saved_blocks_xml = ""; // This would be fetched from a database in a real scena
       
       <!-- Toolbox Tabs / Bottom Bar -->
       <div class="absolute bottom-6 left-1/2 z-10 -translate-x-1/2 flex items-center gap-2 rounded-full border border-zinc-800 bg-zinc-950/90 p-1.5 backdrop-blur-xl shadow-2xl">
-        <button onclick="workspace.zoomToFit()" class="flex h-10 w-10 items-center justify-center rounded-full text-zinc-400 hover:bg-zinc-800 hover:text-white transition-colors" title="Fit Workspace">
+        <button onclick="smartZoomToFit()" class="flex h-10 w-10 items-center justify-center rounded-full text-zinc-400 hover:bg-zinc-800 hover:text-white transition-colors" title="Fit Workspace">
             <i data-lucide="maximize" class="h-4 w-4"></i>
         </button>
         <div class="h-6 w-px bg-zinc-800/50"></div>
@@ -217,99 +217,140 @@ $saved_blocks_xml = ""; // This would be fetched from a database in a real scena
     style.textContent = `
       :root {
         --accent-blue: #3b82f6;
+        --bg-dark: #09090b; /* Zinc 950 */
+        --border-color: rgba(255,255,255,0.08);
       }
       
-      /* Main Toolbox Container */
+      /* 1. Main Toolbox Container */
       .blocklyToolboxDiv, .blocklyToolbox {
-        background-color: #111420 !important;
-        border-right: 1px solid rgba(255,255,255,0.05) !important;
+        background-color: var(--bg-dark) !important;
+        border-right: 1px solid var(--border-color) !important;
         color: #fff !important;
         padding-top: 10px !important;
-        width: 210px !important; /* Increased width significantly to prevent text clipping */
-        scrollbar-width: none !important; /* Firefox */
-        -ms-overflow-style: none !important;  /* IE and Edge */
+        /* Ensure it covers the full height and doesn't shrink */
+        height: 100% !important; 
+        box-sizing: border-box !important;
       }
       
-      .blocklyToolboxDiv::-webkit-scrollbar {
-        display: none !important; /* Chrome, Safari and Opera */
+      /* 2. THE FIX: Hide Blockly's SVG Scrollbars (The White/Grey Line) */
+      .blocklyScrollbarVertical, 
+      .blocklyScrollbarHorizontal, 
+      .blocklyScrollbarBackground, 
+      .blocklyScrollbarHandle {
+        display: none !important;
+        visibility: hidden !important;
+        fill-opacity: 0 !important;
+        stroke: none !important;
       }
 
-      /* Toolbox Rows (Categories) */
+      /* 3. Hide Browser Scrollbars */
+      .blocklyToolboxDiv::-webkit-scrollbar {
+        display: none !important;
+        width: 0px !important;
+      }
+
+      /* 4. Toolbox Rows (Categories) */
       .blocklyTreeRow {
-        height: 38px !important;
-        line-height: 38px !important;
-        margin: 4px 12px !important;
-        padding: 0 10px !important;
-        border-radius: 8px !important;
+        height: 42px !important; /* Slightly taller for better touch targets */
+        line-height: 42px !important;
+        margin: 4px 8px !important;
+        padding: 0 12px !important;
+        border-radius: 6px !important;
         background-color: transparent !important;
         border: none !important;
-        transition: background 0.2s !important;
         display: flex !important;
         align-items: center !important;
+        cursor: pointer !important;
+        position: relative !important;
       }
 
+      /* Hover Effect */
       .blocklyTreeRow:not(.blocklyTreeSelected):hover {
         background-color: rgba(255, 255, 255, 0.05) !important;
       }
 
+      /* Selected Active State */
       .blocklyTreeSelected {
         background-color: var(--accent-blue) !important;
       }
 
+      /* 5. Text Labels */
       .blocklyTreeLabel {
         font-family: 'Outfit', sans-serif !important;
         font-size: 13px !important;
-        font-weight: 600 !important;
-        color: #94a3b8 !important; 
-        margin-left: 8px !important;
-        white-space: nowrap !important; /* Prevent text wrapping/clipping */
-        overflow: visible !important;   /* Ensure text is fully visible */
+        font-weight: 500 !important;
+        color: #a1a1aa !important; /* Muted text */
+        margin-left: 0px !important; /* Reset margins */
       }
 
       .blocklyTreeSelected .blocklyTreeLabel {
         color: #fff !important;
+        font-weight: 600 !important;
       }
 
-      /* Category Specific Coloring */
-      .blocklyToolboxCategory[id*="blockly-0"] .blocklyToolboxCategoryLabel { color: #60a5fa !important; } /* Flight */
-      .blocklyToolboxCategory[id*="blockly-1"] .blocklyToolboxCategoryLabel { color: #22d3ee !important; } /* Nav */
-      .blocklyToolboxCategory[id*="blockly-2"] .blocklyToolboxCategoryLabel { color: #a78bfa !important; } /* Logic */
-      .blocklyToolboxCategory[id*="blockly-3"] .blocklyToolboxCategoryLabel { color: #34d399 !important; } /* Sensors */
-      .blocklyToolboxCategory[id*="blockly-4"] .blocklyToolboxCategoryLabel { color: #fbbf24 !important; } /* AI */
-      .blocklyToolboxCategory[id*="blockly-5"] .blocklyToolboxCategoryLabel { color: #f87171 !important; } /* Safety */
-
-      /* Flyout & Workspace */
+      /* 6. The Flyout (Popup Menu) Background */
       .blocklyFlyoutBackground {
-        fill: #161b2b !important;
+        fill: #18181b !important; /* Slightly lighter than toolbox for contrast */
         fill-opacity: 0.98 !important;
+        stroke: var(--border-color) !important;
+        stroke-width: 1px !important;
       }
 
+      /* 7. Main Workspace Background */
       .blocklyMainBackground {
-        fill: #0f111a !important;
-      }
-
-      /* Aggressively hide ALL scrollbars and handles */
-      .blocklyScrollbarVertical,
-      .blocklyScrollbarHorizontal,
-      .blocklyScrollbarHandle,
-      .blocklyScrollbarBackground {
-        display: none !important;
-        visibility: hidden !important;
-        opacity: 0 !important;
-        pointer-events: none !important;
-      }
-
-      .blocklyFlyoutBackground {
-        fill: #161b2b !important;
-        fill-opacity: 0.98 !important;
+        fill: #09090b !important; /* Matches main bg */
         stroke: none !important;
       }
       
+      /* 8. Text Inside Blocks */
+      .blocklyText {
+        fill: #fff !important;
+        font-family: 'Outfit', sans-serif !important;
+        font-weight: 500 !important;
+      }
+
+      /* Hide Default Folder Icons */
       .blocklyTreeIcon { display: none !important; }
+      
+      /* Color Categories */
+      .blocklyToolboxCategory[id*="blockly-0"] .blocklyTreeRow { border-left: 3px solid #3b82f6 !important; }
+      .blocklyToolboxCategory[id*="blockly-1"] .blocklyTreeRow { border-left: 3px solid #06b6d4 !important; }
+      .blocklyToolboxCategory[id*="blockly-2"] .blocklyTreeRow { border-left: 3px solid #8b5cf6 !important; }
+      .blocklyToolboxCategory[id*="blockly-3"] .blocklyTreeRow { border-left: 3px solid #10b981 !important; }
+      .blocklyToolboxCategory[id*="blockly-4"] .blocklyTreeRow { border-left: 3px solid #f59e0b !important; }
+      .blocklyToolboxCategory[id*="blockly-5"] .blocklyTreeRow { border-left: 3px solid #ef4444 !important; }
     `;
     document.head.appendChild(style);
   };
   injectStyles();
+
+  // Smart Zoom to Fit - Prevents toolbox zoom and limits scale
+  function smartZoomToFit() {
+    if (typeof workspace === 'undefined') return;
+    
+    const metrics = workspace.getMetrics();
+    const contentWidth = metrics.contentWidth;
+    const contentHeight = metrics.contentHeight;
+    const viewWidth = metrics.viewWidth;
+    const viewHeight = metrics.viewHeight;
+    
+    // Don't zoom if workspace is empty
+    if (contentWidth === 0 || contentHeight === 0) {
+      workspace.scrollCenter();
+      return;
+    }
+    
+    // Calculate scale to fit with padding
+    const scaleX = (viewWidth * 0.9) / contentWidth;
+    const scaleY = (viewHeight * 0.9) / contentHeight;
+    let targetScale = Math.min(scaleX, scaleY);
+    
+    // Limit scale to reasonable bounds (0.5x to 1.2x)
+    targetScale = Math.max(0.5, Math.min(1.2, targetScale));
+    
+    workspace.setScale(targetScale);
+    workspace.scrollCenter();
+  }
 
   // Mission Persistence Helper (Root Version)
   function saveMission() {
@@ -350,6 +391,31 @@ $saved_blocks_xml = ""; // This would be fetched from a database in a real scena
       }
       bleIsConnected = isConnected;
   };
+
+  // CRITICAL FIX: Decouple Flyout zoom from Workspace zoom
+  // This keeps the block picker menu at a fixed readable size
+  window.addEventListener('load', function() {
+    if (typeof Blockly !== 'undefined') {
+      // Override for Vertical Flyout (most common)
+      if (Blockly.VerticalFlyout) {
+        Blockly.VerticalFlyout.prototype.getFlyoutScale = function() {
+          return 1; // Always return scale 1.0 (100%)
+        };
+      }
+      
+      // Fallback for different Blockly versions
+      if (Blockly.Flyout) {
+        Blockly.Flyout.prototype.getFlyoutScale = function() {
+          return 1;
+        };
+      }
+      
+      // Force refresh if workspace already exists
+      if (typeof workspace !== 'undefined' && workspace.getFlyout) {
+        workspace.getFlyout().reflow();
+      }
+    }
+  });
 </script>
 <!-- Safety: Ensure boot loader vanishes even if site.js has issues -->
 <script>
