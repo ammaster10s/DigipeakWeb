@@ -9,7 +9,7 @@ include __DIR__ . "/php/partials/header.php";
     href="/prj-gt.php"
     class="group relative col-span-1 overflow-hidden border border-zinc-800 bg-zinc-900 transition-colors hover:border-red-600 md:col-span-2 md:row-span-2"
   >
-    <div class="absolute inset-0 bg-[url('/public/GhostTracker_Render.png')] bg-cover bg-center opacity-40 grayscale transition-all group-hover:opacity-60 group-hover:grayscale-0"></div>
+    <div class="absolute inset-0 bg-[url('/public/GhostTracker_Render.png')] bg-cover bg-center opacity-45 grayscale transition-all group-hover:opacity-70 group-hover:grayscale-0"></div>
     <div class="absolute bottom-4 left-4">
       <p class="font-mono text-xs text-red-500">[PRJ-GT]</p>
       <h2 class="text-3xl font-bold text-white">GHOST TRACKER</h2>
@@ -39,7 +39,7 @@ include __DIR__ . "/php/partials/header.php";
     href="/prj-3ds.php"
     class="group relative col-span-1 overflow-hidden border border-zinc-800 bg-zinc-900 transition-colors hover:border-white"
   >
-    <div class="absolute inset-0 bg-[url('/public/Kaiklom_3D_printing_2.png')] bg-cover bg-center opacity-20 grayscale transition-all group-hover:opacity-30 group-hover:grayscale-0"></div>
+    <div class="absolute inset-0 bg-[url('/public/Kaiklom_3D_printing_2.png')] bg-cover bg-center opacity-70 grayscale transition-all group-hover:opacity-80 group-hover:grayscale-0"></div>
     <div class="relative p-4">
       <h3 class="font-mono text-xs text-zinc-500">FACTORY_FLOOR</h3>
       <div class="mt-4 text-xl font-bold">3D PRINTING</div>
@@ -51,7 +51,7 @@ include __DIR__ . "/php/partials/header.php";
     href="/prj-mrt.php"
     class="group relative col-span-1 overflow-hidden border border-zinc-800 bg-zinc-900 transition-colors hover:border-white"
   >
-    <div class="absolute inset-0 bg-[url('/public/Morintha_Render.png')] bg-cover bg-center opacity-20 grayscale transition-all group-hover:opacity-30 group-hover:grayscale-0"></div>
+    <div class="absolute inset-0 bg-[url('/public/Morintha_Render.png')] bg-cover bg-center opacity-60 grayscale transition-all group-hover:opacity-75 group-hover:grayscale-0"></div>
     <div class="relative p-4">
       <h3 class="font-mono text-xs text-zinc-500">DATA_LOG</h3>
       <div class="mt-4 text-xl font-bold">MORINTHA AI</div>

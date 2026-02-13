@@ -105,7 +105,7 @@ include __DIR__ . "/php/partials/header.php";
       </div>
     </div>
 
-    <div class="grid-border border border-zinc-900 bg-black/80 p-4 md:p-5">
+    <!-- <div class="grid-border border border-zinc-900 bg-black/80 p-4 md:p-5">
       <p class="font-mono text-xs uppercase tracking-[0.22em] text-zinc-400">
         VINTAGE RESTORATION // 3D SCAN VS PRINT
       </p>
@@ -130,7 +130,7 @@ include __DIR__ . "/php/partials/header.php";
             PRINTED PART PLACEHOLDER
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
   </section>
 </div>
