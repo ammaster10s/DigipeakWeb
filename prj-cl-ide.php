@@ -2,7 +2,10 @@
 $pageTitle = "DIGIPEAK OPS // CODELIFT IDE";
 $pageDescription = "Real-time drone mission engineering and flight control interface.";
 include __DIR__ . "/php/partials/header.php";
-
+?>
+</main> <!-- Close main tag from header.php to avoid layout issues in full-screen IDE -->
+<script src="/php/assets/site.js"></script> <!-- Load early to handle boot-loader -->
+<?php
 // Mission Persistence Mock (from Codelift study)
 $user_pilot = "PILOT_01";
 $saved_blocks_xml = ""; // This would be fetched from a database in a real scenario
@@ -347,6 +350,16 @@ $saved_blocks_xml = ""; // This would be fetched from a database in a real scena
       }
       bleIsConnected = isConnected;
   };
+</script>
+<!-- Safety: Ensure boot loader vanishes even if site.js has issues -->
+<script>
+  setTimeout(() => {
+    const boot = document.getElementById('boot-loader');
+    if (boot && boot.style.display !== 'none') {
+      boot.classList.add('boot-hidden');
+      setTimeout(() => boot.style.display = 'none', 500);
+    }
+  }, 3000);
 </script>
 <!-- Note: Site footer is omitted for full-screen IDE experience to prevent layout shifts -->
 </body>
