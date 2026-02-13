@@ -20,6 +20,18 @@ include __DIR__ . "/php/partials/header.php";
       Codelift exposes the structural logic behind a 10-inch performance frame, from carbon fiber
       spars to control silicon. Built for engineers, not spectators.
     </p>
+    <div class="pt-4">
+      <a
+        href="/prj-cl-ide.php"
+        class="inline-flex items-center gap-3 border border-red-600 bg-red-600/5 px-6 py-3 font-mono text-sm uppercase tracking-widest text-red-500 transition-all hover:bg-red-600 hover:text-white"
+      >
+        <span class="relative flex h-2 w-2">
+          <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span>
+          <span class="relative inline-flex h-2 w-2 rounded-full bg-red-500"></span>
+        </span>
+        LAUNCH OPERATION CENTER
+      </a>
+    </div>
   </header>
 
   <section class="grid gap-10 md:grid-cols-[1.1fr_minmax(0,1fr)]">

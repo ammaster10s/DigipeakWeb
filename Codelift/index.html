@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title> Codelift IDE</title>
+  
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Blockly Core -->
+  <script src="https://unpkg.com/blockly/blockly.min.js"></script>
+  
+  <style>
+    :root {
+      --bg-dark: #0f111a;
+      --bg-card: #1a1d2e;
+      --accent-blue: #3b82f6;
+      --accent-purple: #8b5cf6;
+      --accent-cyan: #06b6d4;
+      --accent-danger: #ef4444;
+      --accent-success: #10b981;
+      --text-main: #e2e8f0;
+      --text-muted: #94a3b8;
+      --glass-bg: rgba(26, 29, 46, 0.8);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    }
+
+    * { box-sizing: border-box; }
+    
+    body {
+      margin: 0;
+      font-family: 'Outfit', sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-main);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Header Styling */
+    header {
+      padding: 12px 24px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--glass-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 100;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-container h1 {
+      margin: 0;
+      font-size: 22px;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.5px;
+    }
+
+    .connection-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.05);
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 500;
+      border: 1px solid var(--glass-border);
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent-danger);
+      box-shadow: 0 0 10px var(--accent-danger);
+      transition: all 0.3s ease;
+    }
+
+    .status-dot.connected {
+      background: var(--accent-success);
+      box-shadow: 0 0 10px var(--accent-success);
+    }
+
+    /* Main Content Layout */
+    main {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      gap: 0;
+      position: relative;
+    }
+
+    #blocklyArea {
+      position: relative;
+      height: 100%;
+      border-right: 1px solid var(--glass-border);
+    }
+
+    #blocklyDiv {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
+
+    /* Sidebar / HUD */
+    aside {
+      background: var(--bg-card);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      border-left: 1px solid var(--glass-border);
+    }
+
+    .sidebar-section {
+      padding: 20px;
+      border-bottom: 1px solid var(--glass-border);
+    }
+
+    .section-title {
+      font-size: 14px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* HUD Visuals */
+    .hud-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .hud-card {
+      background: rgba(255,255,255,0.03);
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid var(--glass-border);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .hud-label {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .hud-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    /* Control Buttons */
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .btn {
+      flex: 1;
+      min-width: 100px;
+      padding: 10px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--glass-border);
+      background: rgba(255,255,255,0.05);
+      color: var(--text-main);
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .btn:hover {
+      background: rgba(255,255,255,0.1);
+      transform: translateY(-1px);
+    }
+
+    .btn.primary {
+      background: var(--accent-blue);
+      border-color: var(--accent-blue);
+      color: white;
+    }
+
+    .btn.primary:hover {
+      background: #2563eb;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+    }
+
+    .btn.danger {
+      background: rgba(239, 68, 68, 0.1);
+      border-color: var(--accent-danger);
+      color: var(--accent-danger);
+    }
+
+    .btn.danger:hover {
+      background: var(--accent-danger);
+      color: white;
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+    }
+
+    /* Code & Log */
+    .terminal-container {
+      background: #000;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-top: 8px;
+    }
+
+    textarea {
+      width: 100%;
+      background: transparent;
+      border: 0;
+      color: #7dd3fc;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      padding: 12px;
+      resize: vertical;
+      outline: none;
+    }
+
+    #jsonPreview { height: 200px; }
+    #simLog { height: 180px; }
+
+    /* Floating Tooltips/Action Bar */
+    .action-bar {
+      position: absolute;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--glass-bg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border);
+      padding: 8px 16px;
+      border-radius: 999px;
+      display: flex;
+      gap: 12px;
+      box-shadow: var(--card-shadow);
+      z-index: 50;
+    }
+
+    /* Flight Instruments Mockup */
+    .instruments {
+      height: 120px;
+      background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+      border-radius: 12px;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--glass-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .artificial-horizon {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(180deg, #38bdf8 50%, #78350f 50%);
+      border: 2px solid white;
+      position: relative;
+      transition: transform 0.1s ease-out;
+    }
+
+    .horizon-line {
+      position: absolute;
+      top: 50%;
+      left: -10%;
+      width: 120%;
+      height: 1px;
+      background: white;
+    }
+
+    /* --- AGGRESSIVE BLOCKLY DARK THEME OVERRIDE --- */
+    
+    /* Main Toolbox Container */
+    .blocklyToolboxDiv, .blocklyToolbox {
+      background-color: #0f111a !important; /* Matches your var(--bg-dark) */
+      border-right: 1px solid rgba(255,255,255,0.05) !important;
+      color: #fff !important;
+      padding-top: 10px !important;
+      height: 100% !important;
+    }
+
+    /* Toolbox Rows (Categories) */
+    .blocklyTreeRow {
+      height: 38px !important;
+      line-height: 38px !important;
+      margin: 4px 12px !important;
+      padding: 0 10px !important;
+      border-radius: 8px !important;
+      background-color: transparent !important; /* Ensures no white background */
+      border: none !important;
+      transition: background 0.2s !important;
+      display: flex !important;
+      align-items: center !important;
+    }
+
+    .blocklyTreeRow:not(.blocklyTreeSelected):hover {
+      background-color: rgba(255, 255, 255, 0.05) !important;
+    }
+
+    .blocklyTreeSelected {
+      background-color: var(--accent-blue) !important;
+    }
+
+    .blocklyTreeLabel {
+      font-family: 'Outfit', sans-serif !important;
+      font-size: 13px !important;
+      font-weight: 600 !important;
+      color: #94a3b8 !important; 
+    }
+
+    .blocklyTreeSelected .blocklyTreeLabel {
+      color: #fff !important;
+    }
+
+    /* Highlighted Categories - Targeting specific labels */
+    .blocklyToolboxCategory[id*="blockly-0"] .blocklyToolboxCategoryLabel { color: #60a5fa !important; } /* Flight - Blue */
+    .blocklyToolboxCategory[id*="blockly-1"] .blocklyToolboxCategoryLabel { color: #22d3ee !important; } /* Nav - Cyan */
+    .blocklyToolboxCategory[id*="blockly-2"] .blocklyToolboxCategoryLabel { color: #a78bfa !important; } /* Logic - Purple */
+    .blocklyToolboxCategory[id*="blockly-3"] .blocklyToolboxCategoryLabel { color: #34d399 !important; } /* Sensors - Green */
+
+    /* General Label Style */
+    .blocklyToolboxCategoryLabel {
+      font-family: 'Outfit', sans-serif !important;
+      font-size: 13px !important;
+      font-weight: 600 !important;
+      color: #94a3b8 !important; /* Muted grey for others */
+      margin-left: 8px !important;
+    }
+    .blocklyFlyoutBackground {
+      fill: #161b2b !important;
+      fill-opacity: 0.98 !important;
+    }
+
+    /* Main Workspace Background */
+    .blocklyMainBackground {
+      fill: #0f111a !important;
+    }
+
+    /* Grid Lines (if enabled) */
+    .blocklyGrid line {
+      stroke: rgba(255,255,255,0.03) !important;
+    }
+
+    /* Hide Default Icons */
+    .blocklyTreeIcon { display: none !important; }
+
+    /* Scrollbars */
+    .blocklyScrollbarHandle {
+      fill: rgba(255,255,255,0.1) !important;
+    }
+
+    /* Scrollbar */
+    aside::-webkit-scrollbar { width: 6px; }
+    aside::-webkit-scrollbar-track { background: transparent; }
+    aside::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+
+    /* Mobile Warning */
+    @media (max-width: 768px) {
+      main { grid-template-columns: 1fr; }
+      aside { display: none; }
+      .mobile-alert { display: block; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--bg-dark); z-index: 1000; padding: 40px; text-align: center; }
+    }
+    .mobile-alert { display: none; }
+  </style>
+</head>
+<body>
+
+<div class="mobile-alert">
+  <h2>Desktop View Required</h2>
+  <p>Codelift IDE requires a larger screen for visual programming.</p>
+</div>
+
+<header>
+  <div class="logo-container">
+    <i data-lucide="navigation-2" style="color: var(--accent-cyan)"></i>
+    <h1>Codelift</h1>
+    <div class="connection-pill">
+      <div id="statusDot" class="status-dot"></div>
+      <span id="connStatus">DISCONNECTED</span>
+    </div>
+  </div>
+  
+  <div class="btn-group" style="margin-top: 0">
+    <button class="btn" onclick="connectBLE()"><i data-lucide="bluetooth"></i> Connect</button>
+    <button class="btn primary" onclick="uploadBLE()"><i data-lucide="arrow-up-circle"></i> Upload Program</button>
+    <button class="btn danger" onclick="emergencyStop()"><i data-lucide="octagon"></i> E-STOP</button>
+  </div>
+</header>
+
+<main>
+  <div id="blocklyArea">
+    <div id="blocklyDiv"></div>
+    <div class="action-bar">
+      <button class="btn" onclick="workspace.zoomToFit()"><i data-lucide="maximize"></i> Fit</button>
+      <button class="btn" onclick="simulate()"><i data-lucide="play"></i> Simulate</button>
+      <button class="btn" onclick="clearWorkspace()"><i data-lucide="trash-2"></i> Clear</button>
+    </div>
+  </div>
+
+  <aside>
+    <section class="sidebar-section">
+      <div class="section-title"><i data-lucide="gauge"></i> Telemetry HUD</div>
+      <div class="instruments">
+        <div id="horizon" class="artificial-horizon">
+            <div class="horizon-line"></div>
+        </div>
+        <div style="position:absolute; right:15px; top:10px; font-size:10px; color:var(--text-muted);">AHRS</div>
+      </div>
+      
+      <div class="hud-grid" style="margin-top: 16px;">
+        <div class="hud-card">
+          <span class="hud-label">BATTERY</span>
+          <span class="hud-value" id="hud-bat">--.- V</span>
+        </div>
+        <div class="hud-card">
+          <span class="hud-label">ALTITUDE</span>
+          <span class="hud-value" id="hud-alt">0.00 M</span>
+        </div>
+        <div class="hud-card">
+          <span class="hud-label">YAW</span>
+          <span class="hud-value" id="hud-yaw">0°</span>
+        </div>
+        <div class="hud-card">
+          <span class="hud-label">STATUS</span>
+          <span class="hud-value" id="hud-status" style="color: var(--accent-danger)">DISARMED</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="sidebar-section">
+      <div class="section-title"><i data-lucide="activity"></i> IMU Sensors</div>
+      <div class="hud-grid">
+        <div class="hud-card">
+          <span class="hud-label">ACCEL X</span>
+          <span class="hud-value" id="hud-ax">0.000 g</span>
+        </div>
+        <div class="hud-card">
+          <span class="hud-label">ACCEL Y</span>
+          <span class="hud-value" id="hud-ay">0.000 g</span>
+        </div>
+        <div class="hud-card">
+          <span class="hud-label">ACCEL Z</span>
+          <span class="hud-value" id="hud-az">0.000 g</span>
+        </div>
+        <div class="hud-card">
+          <span class="hud-label">TEMP</span>
+          <span class="hud-value" id="hud-temp">--.- °C</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="sidebar-section">
+      <div class="section-title"><i data-lucide="terminal"></i> Simulation & Log</div>
+      <div class="terminal-container">
+        <textarea id="simLog" readonly placeholder="System logs will appear here..."></textarea>
+      </div>
+    </section>
+
+    <section class="sidebar-section">
+      <div class="section-title"><i data-lucide="code"></i> Generated Payload</div>
+      <div class="terminal-container">
+        <textarea id="jsonPreview" readonly placeholder="No blocks detected."></textarea>
+      </div>
+    </section>
+
+    <section class="sidebar-section">
+        <div class="section-title"><i data-lucide="settings"></i> Manual Override</div>
+        <div class="btn-group">
+            <button class="btn" onclick="armDrone()"><i data-lucide="shield-check"></i> ARM</button>
+            <button class="btn" onclick="disarmDrone()"><i data-lucide="shield-off"></i> DISARM</button>
+            <button class="btn danger" onclick="landNow()"><i data-lucide="arrow-down"></i> FORCE LAND</button>
+        </div>
+    </section>
+  </aside>
+</main>
+
+<!-- Blockly Toolbox Definition -->
+<xml id="toolbox" style="display:none">
+  <category name="Flight" colour="#3b82f6">
+    <block type="arm_drone"></block>
+    <block type="disarm_drone"></block>
+    <sep gap="12"></sep>
+    <block type="takeoff"></block>
+    <block type="land"></block>
+    <block type="rth"></block>
+    <block type="emergency_stop"></block>
+  </category>
+
+  <category name="Navigation" colour="#06b6d4">
+      <block type="move_relative"></block>
+      <block type="move_to_waypoint"></block>
+      <block type="orbit_target"></block>
+      <sep gap="12"></sep>
+      <block type="set_speed"></block>
+      <block type="set_altitude"></block>
+      <block type="set_heading"></block>
+  </category>
+
+  <category name="Logic" colour="#8b5cf6">
+    <block type="controls_if"></block>
+    <block type="logic_compare"></block>
+    <block type="logic_operation"></block>
+    <block type="logic_negate"></block>
+    <block type="logic_boolean"></block>
+    <sep gap="12"></sep>
+    <block type="controls_repeat_ext"></block>
+    <block type="controls_whileUntil"></block>
+    <block type="drone_value"></block>
+    <block type="wait"></block>
+    <block type="wait_until"></block>
+  </category>
+
+  <category name="Sensors" colour="#10b981">
+    <block type="get_battery"></block>
+    <block type="get_altitude"></block>
+    <block type="get_gps"></block>
+    <block type="get_imu"></block>
+    <block type="detect_obstacle"></block>
+  </category>
+
+  <category name="Vision AI" colour="#f59e0b">
+    <block type="camera_control"></block>
+    <block type="detect_object"></block>
+    <block type="track_object"></block>
+    <block type="take_photo"></block>
+  </category>
+
+  <category name="Safety" colour="#ef4444">
+      <block type="safety_check"></block>
+      <block type="set_altitude_limit"></block>
+      <block type="battery_guard"></block>
+  </category>
+
+  <sep></sep>
+  <category name="Variables" colour="#a855f7" custom="VARIABLE"></category>
+  <category name="Functions" colour="#ec4899" custom="PROCEDURE"></category>
+</xml>
+
+<script src="blocks.js"></script>
+<script src="generator.js"></script>
+<script src="app.js"></script>
+
+<script>
+  // Initialize Lucide icons
+  lucide.createIcons();
+  
+  // Responsive Blockly Resize
+  const blocklyArea = document.getElementById('blocklyArea');
+  const blocklyDiv = document.getElementById('blocklyDiv');
+  window.addEventListener('resize', () => {
+    Blockly.svgResize(workspace);
+  }, false);
+</script>
+
+</body>
+</html>
