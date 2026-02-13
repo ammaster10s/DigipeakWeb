@@ -222,6 +222,12 @@ $saved_blocks_xml = ""; // This would be fetched from a database in a real scena
         color: #fff !important;
         padding-top: 10px !important;
         width: 170px !important;
+        scrollbar-width: none !important; /* Firefox */
+        -ms-overflow-style: none !important;  /* IE and Edge */
+      }
+      
+      .blocklyToolboxDiv::-webkit-scrollbar {
+        display: none !important; /* Chrome, Safari and Opera */
       }
 
       /* Toolbox Rows (Categories) */
@@ -276,8 +282,21 @@ $saved_blocks_xml = ""; // This would be fetched from a database in a real scena
         fill: #0f111a !important;
       }
 
-      .blocklyScrollbarHandle {
-        fill: rgba(255,255,255,0.1) !important;
+      /* Aggressively hide ALL scrollbars and handles */
+      .blocklyScrollbarVertical,
+      .blocklyScrollbarHorizontal,
+      .blocklyScrollbarHandle,
+      .blocklyScrollbarBackground {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+      }
+
+      .blocklyFlyoutBackground {
+        fill: #161b2b !important;
+        fill-opacity: 0.98 !important;
+        stroke: none !important;
       }
       
       .blocklyTreeIcon { display: none !important; }
