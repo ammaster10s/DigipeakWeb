@@ -144,17 +144,81 @@ $saved_blocks_xml = ""; // This would be fetched from a database in a real scena
         </div>
       </div>
 
-      <!-- JSON Preview (Developer) -->
+      <!-- Protocol / Developer Terminal -->
       <div class="p-6 pt-0">
-        <details class="group border border-zinc-900 bg-zinc-950/30">
-            <summary class="flex cursor-pointer items-center justify-between p-3 font-mono text-[10px] uppercase tracking-widest text-zinc-600 hover:bg-zinc-900">
-                <span>PROTOCOL_PREVIEW</span>
-                <i data-lucide="chevron-down" class="h-3 w-3 transition-transform group-open:rotate-180"></i>
-            </summary>
-            <div class="p-3">
-                <textarea id="jsonPreview" readonly class="w-full bg-transparent font-mono text-[10px] text-zinc-500 outline-none" rows="8"></textarea>
+        <div class="border border-zinc-900 bg-zinc-950/30">
+          <!-- Tab Header -->
+          <div class="flex border-b border-zinc-900">
+            <button id="tabPreviewBtn" onclick="switchDevTab('preview')" class="flex-1 flex items-center justify-center gap-2 p-3 font-mono text-[10px] uppercase tracking-widest text-white bg-zinc-900/50 border-b-2 border-red-600 transition-all">
+              <i data-lucide="code" class="h-3 w-3"></i>
+              PROTOCOL_PREVIEW
+            </button>
+            <button id="tabDevBtn" onclick="switchDevTab('dev')" class="flex-1 flex items-center justify-center gap-2 p-3 font-mono text-[10px] uppercase tracking-widest text-zinc-600 hover:text-zinc-400 hover:bg-zinc-900/30 border-b-2 border-transparent transition-all">
+              <i data-lucide="terminal" class="h-3 w-3"></i>
+              DEV_TERMINAL
+            </button>
+          </div>
+
+          <!-- Protocol Preview Panel -->
+          <div id="panelPreview" class="p-3">
+            <textarea id="jsonPreview" readonly class="w-full bg-transparent font-mono text-[10px] text-zinc-500 outline-none resize-none" rows="8"></textarea>
+          </div>
+
+          <!-- Developer Terminal Panel -->
+          <div id="panelDev" class="hidden">
+            <!-- Terminal Header -->
+            <div class="flex items-center justify-between px-3 py-2 border-b border-zinc-900 bg-zinc-900/20">
+              <div class="flex items-center gap-2">
+                <div id="devPulseDot" class="h-1.5 w-1.5 rounded-full bg-red-600 animate-pulse"></div>
+                <span class="font-mono text-[9px] uppercase tracking-widest text-zinc-500">BLE_COMMAND_INTERFACE</span>
+              </div>
+              <button onclick="clearDevLog()" class="font-mono text-[9px] uppercase tracking-widest text-zinc-700 hover:text-zinc-400 transition-colors">CLEAR</button>
             </div>
-        </details>
+
+            <!-- Log Output -->
+            <div id="devLog" class="h-40 overflow-y-auto p-3 font-mono text-[10px] leading-relaxed scroll-smooth" style="scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.05) transparent;">
+              <div class="text-zinc-600">// CODELIFT DEV_TERMINAL v1.0</div>
+              <div class="text-zinc-600">// Type command + ENTER to transmit via BLE</div>
+              <div class="text-zinc-600">// ↑↓ arrows for CMD_HISTORY</div>
+              <div class="text-zinc-800">─────────────────────────────────────</div>
+            </div>
+
+            <!-- Command Input -->
+            <div class="flex items-center border-t border-zinc-900 bg-zinc-950">
+              <span class="pl-3 pr-1 font-mono text-xs text-red-600 font-bold select-none">▸</span>
+              <input type="text" id="devCmdInput"
+                     class="flex-1 bg-transparent py-2.5 font-mono text-[11px] text-zinc-300 outline-none placeholder:text-zinc-800"
+                     placeholder='SET_MOTOR,1,500 or {"cmd":"disarm"}'
+                     onkeydown="handleDevKey(event)" autocomplete="off" spellcheck="false">
+              <button onclick="sendDevCmd()" class="flex items-center gap-1.5 bg-red-600 hover:bg-red-700 px-3 py-1.5 m-1.5 font-mono text-[9px] font-bold uppercase tracking-widest text-white transition-all active:scale-95">
+                <i data-lucide="send" class="h-2.5 w-2.5"></i>
+                TX
+              </button>
+            </div>
+
+            <!-- Quick Commands -->
+            <div class="border-t border-zinc-900 bg-zinc-950/50 p-2">
+              <div class="font-mono text-[8px] uppercase tracking-widest text-zinc-800 mb-1.5">MOTOR_TEST</div>
+              <div class="flex flex-wrap gap-1">
+                <button onclick="quickCmd('SET_MOTOR,1,500')" class="border border-zinc-800 bg-zinc-900/50 px-2 py-1 font-mono text-[9px] text-zinc-500 hover:border-zinc-600 hover:text-zinc-300 transition-all">M1_25%</button>
+                <button onclick="quickCmd('SET_MOTOR,2,500')" class="border border-zinc-800 bg-zinc-900/50 px-2 py-1 font-mono text-[9px] text-zinc-500 hover:border-zinc-600 hover:text-zinc-300 transition-all">M2_25%</button>
+                <button onclick="quickCmd('SET_MOTOR,1,1000')" class="border border-zinc-800 bg-zinc-900/50 px-2 py-1 font-mono text-[9px] text-zinc-500 hover:border-zinc-600 hover:text-zinc-300 transition-all">M1_50%</button>
+                <button onclick="quickCmd('SET_MOTOR,2,1000')" class="border border-zinc-800 bg-zinc-900/50 px-2 py-1 font-mono text-[9px] text-zinc-500 hover:border-zinc-600 hover:text-zinc-300 transition-all">M2_50%</button>
+                <button onclick="quickCmd('SET_MOTOR,1,0')" class="border border-zinc-800 bg-zinc-900/50 px-2 py-1 font-mono text-[9px] text-zinc-500 hover:border-zinc-600 hover:text-zinc-300 transition-all">M1_OFF</button>
+                <button onclick="quickCmd('SET_MOTOR,2,0')" class="border border-zinc-800 bg-zinc-900/50 px-2 py-1 font-mono text-[9px] text-zinc-500 hover:border-zinc-600 hover:text-zinc-300 transition-all">M2_OFF</button>
+              </div>
+            </div>
+            <div class="border-t border-zinc-900/50 bg-zinc-950/50 p-2 pt-1">
+              <div class="font-mono text-[8px] uppercase tracking-widest text-zinc-800 mb-1.5">SAFETY_CMD</div>
+              <div class="flex flex-wrap gap-1">
+                <button onclick='quickCmd("{\"cmd\":\"arm\"}")' class="border border-zinc-800 bg-zinc-900/50 px-2 py-1 font-mono text-[9px] text-zinc-500 hover:border-zinc-600 hover:text-zinc-300 transition-all">{arm}</button>
+                <button onclick='quickCmd("{\"cmd\":\"disarm\"}")' class="border border-red-900/30 bg-red-950/10 px-2 py-1 font-mono text-[9px] text-red-700 hover:border-red-700 hover:text-red-500 transition-all">{disarm}</button>
+                <button onclick='quickCmd("{\"cmd\":\"estop\"}")' class="border border-red-900/30 bg-red-950/10 px-2 py-1 font-mono text-[9px] text-red-700 hover:border-red-700 hover:text-red-500 transition-all">{estop}</button>
+                <button onclick='quickCmd("{\"cmd\":\"land\"}")' class="border border-red-900/30 bg-red-950/10 px-2 py-1 font-mono text-[9px] text-red-700 hover:border-red-700 hover:text-red-500 transition-all">{land}</button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -416,6 +480,173 @@ $saved_blocks_xml = ""; // This would be fetched from a database in a real scena
       }
     }
   });
+
+  // ============================================
+  // === DEVELOPER TERMINAL ===
+  // ============================================
+
+  let devCmdHistory = [];
+  let devHistoryIdx = -1;
+
+  // --- Tab Switching ---
+  function switchDevTab(tab) {
+    const previewBtn = document.getElementById('tabPreviewBtn');
+    const devBtn = document.getElementById('tabDevBtn');
+    const previewPanel = document.getElementById('panelPreview');
+    const devPanel = document.getElementById('panelDev');
+
+    if (tab === 'preview') {
+      previewBtn.className = 'flex-1 flex items-center justify-center gap-2 p-3 font-mono text-[10px] uppercase tracking-widest text-white bg-zinc-900/50 border-b-2 border-red-600 transition-all';
+      devBtn.className = 'flex-1 flex items-center justify-center gap-2 p-3 font-mono text-[10px] uppercase tracking-widest text-zinc-600 hover:text-zinc-400 hover:bg-zinc-900/30 border-b-2 border-transparent transition-all';
+      previewPanel.classList.remove('hidden');
+      devPanel.classList.add('hidden');
+    } else {
+      devBtn.className = 'flex-1 flex items-center justify-center gap-2 p-3 font-mono text-[10px] uppercase tracking-widest text-white bg-zinc-900/50 border-b-2 border-red-600 transition-all';
+      previewBtn.className = 'flex-1 flex items-center justify-center gap-2 p-3 font-mono text-[10px] uppercase tracking-widest text-zinc-600 hover:text-zinc-400 hover:bg-zinc-900/30 border-b-2 border-transparent transition-all';
+      devPanel.classList.remove('hidden');
+      previewPanel.classList.add('hidden');
+      setTimeout(() => {
+        const input = document.getElementById('devCmdInput');
+        if (input) input.focus();
+      }, 100);
+    }
+    if (window.lucide) lucide.createIcons();
+  }
+
+  // --- Dev Log ---
+  function devLog(msg, type) {
+    const log = document.getElementById('devLog');
+    if (!log) return;
+    const ts = new Date().toLocaleTimeString([], { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    const entry = document.createElement('div');
+
+    const colors = {
+      sent: 'text-amber-500',
+      recv: 'text-emerald-500',
+      err:  'text-red-500',
+      info: 'text-zinc-600'
+    };
+    entry.className = colors[type] || 'text-zinc-500';
+    entry.innerHTML = `<span class="text-zinc-800 mr-2">${ts}</span>${escapeHtml(msg)}`;
+    log.appendChild(entry);
+    log.scrollTop = log.scrollHeight;
+  }
+
+  function escapeHtml(str) {
+    const d = document.createElement('div');
+    d.textContent = str;
+    return d.innerHTML;
+  }
+
+  function clearDevLog() {
+    const log = document.getElementById('devLog');
+    if (log) log.innerHTML = '<div class="text-zinc-600">// log cleared</div>';
+  }
+
+  // --- BLE Send ---
+  async function sendRawBLE(cmdString) {
+    if (!bleIsConnected || !bleCmdChar) {
+      devLog('ERR: NO_BLE_LINK — Initialize link first', 'err');
+      logToTerminal('DEV: Cannot send — not connected', true);
+      return false;
+    }
+    try {
+      const data = new TextEncoder().encode(cmdString + '\n');
+      const mtu = 200;
+      for (let i = 0; i < data.length; i += mtu) {
+        await bleCmdChar.writeValue(data.slice(i, i + mtu));
+      }
+      devLog('TX → ' + cmdString, 'sent');
+      logToTerminal('DEV TX: ' + cmdString);
+      return true;
+    } catch (err) {
+      devLog('TX_FAIL: ' + err.message, 'err');
+      logToTerminal('DEV TX Error: ' + err.message, true);
+      return false;
+    }
+  }
+
+  function sendDevCmd() {
+    const input = document.getElementById('devCmdInput');
+    if (!input) return;
+    const cmd = input.value.trim();
+    if (!cmd) return;
+
+    if (devCmdHistory.length === 0 || devCmdHistory[devCmdHistory.length - 1] !== cmd) {
+      devCmdHistory.push(cmd);
+    }
+    devHistoryIdx = -1;
+    sendRawBLE(cmd);
+    input.value = '';
+    input.focus();
+  }
+
+  function quickCmd(cmd) {
+    devLog('QUICK → ' + cmd, 'info');
+    sendRawBLE(cmd);
+  }
+
+  // --- History Navigation ---
+  function handleDevKey(e) {
+    const input = document.getElementById('devCmdInput');
+    if (!input) return;
+
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      sendDevCmd();
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (devCmdHistory.length === 0) return;
+      if (devHistoryIdx === -1) {
+        devHistoryIdx = devCmdHistory.length - 1;
+      } else if (devHistoryIdx > 0) {
+        devHistoryIdx--;
+      }
+      input.value = devCmdHistory[devHistoryIdx];
+      setTimeout(() => input.setSelectionRange(input.value.length, input.value.length), 0);
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (devHistoryIdx === -1) return;
+      if (devHistoryIdx < devCmdHistory.length - 1) {
+        devHistoryIdx++;
+        input.value = devCmdHistory[devHistoryIdx];
+      } else {
+        devHistoryIdx = -1;
+        input.value = '';
+      }
+    }
+  }
+
+  // --- Forward telemetry to dev log (throttled) ---
+  const _origUpdateHUD = updateHUD;
+  let _lastDevTelemTime = 0;
+
+  updateHUD = function(data) {
+    _origUpdateHUD(data);
+    const now = Date.now();
+    if (now - _lastDevTelemTime > 2000) {
+      _lastDevTelemTime = now;
+      const devPanel = document.getElementById('panelDev');
+      if (devPanel && !devPanel.classList.contains('hidden')) {
+        const parts = [];
+        if (data.bat !== undefined) parts.push('bat:' + data.bat.toFixed(1) + 'V');
+        if (data.alt !== undefined) parts.push('alt:' + data.alt.toFixed(2) + 'm');
+        if (data.y !== undefined) parts.push('yaw:' + Math.round(data.y) + '°');
+        if (data.st !== undefined) parts.push(data.st ? 'ARMED' : 'DISARMED');
+        if (parts.length > 0) {
+          devLog('RX ← ' + parts.join(' | '), 'recv');
+        }
+      }
+    }
+  };
+
+  // Global exports
+  window.switchDevTab = switchDevTab;
+  window.sendDevCmd = sendDevCmd;
+  window.quickCmd = quickCmd;
+  window.handleDevKey = handleDevKey;
+  window.clearDevLog = clearDevLog;
+
 </script>
 <!-- Safety: Ensure boot loader vanishes even if site.js has issues -->
 <script>
