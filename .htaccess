@@ -1,0 +1,15 @@
+RewriteEngine On
+
+# Don't rewrite existing files or directories
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Clean URL Routes (case-insensitive [NC])
+RewriteRule ^PRJ-GT$          /prj-gt.php [L,NC]
+RewriteRule ^PRJ-CL$          /prj-cl.php [L,NC]
+RewriteRule ^Codelift-IDE$    /prj-cl-ide.php [L,NC]
+RewriteRule ^Codelift-IMU$    /prj-cl-imu.php [L,NC]
+RewriteRule ^MOR-AI$          /prj-mrt.php [L,NC]
+RewriteRule ^LOG-3DS$         /prj-3ds.php [L,NC]
+RewriteRule ^Privacy$         /privacy.php [L,NC]
+RewriteRule ^ToS$             /tos.php [L,NC]
