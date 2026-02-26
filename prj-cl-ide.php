@@ -123,19 +123,40 @@ $saved_blocks_xml = ""; // This would be fetched from a database in a real scena
           </div>
         </div>
         
-        <!-- IMU Detailed -->
-        <div class="mt-4 grid grid-cols-3 gap-2">
-            <div class="flex flex-col border border-zinc-900 bg-zinc-900/20 p-2">
-                <span class="font-mono text-[8px] text-zinc-600">ACC_X</span>
-                <span id="hud-ax" class="font-mono text-[10px] text-zinc-400">0.000g</span>
+        <!-- IMU Accelerometer -->
+        <div class="mt-4">
+            <div class="font-mono text-[8px] uppercase tracking-widest text-zinc-600 mb-2">ACCELEROMETER (g)</div>
+            <div class="grid grid-cols-3 gap-2">
+                <div class="flex flex-col border border-zinc-900 bg-zinc-900/20 p-2">
+                    <span class="font-mono text-[8px] text-zinc-600">AX <span class="text-zinc-700">→ROLL</span></span>
+                    <span id="hud-ax" class="font-mono text-[10px] text-red-400/80">0.000g</span>
+                </div>
+                <div class="flex flex-col border border-zinc-900 bg-zinc-900/20 p-2">
+                    <span class="font-mono text-[8px] text-zinc-600">AY <span class="text-zinc-700">→PITCH</span></span>
+                    <span id="hud-ay" class="font-mono text-[10px] text-blue-400/80">0.000g</span>
+                </div>
+                <div class="flex flex-col border border-zinc-900 bg-zinc-900/20 p-2">
+                    <span class="font-mono text-[8px] text-zinc-600">AZ <span class="text-zinc-700">→PITCH</span></span>
+                    <span id="hud-az" class="font-mono text-[10px] text-green-400/80">0.000g</span>
+                </div>
             </div>
-            <div class="flex flex-col border border-zinc-900 bg-zinc-900/20 p-2">
-                <span class="font-mono text-[8px] text-zinc-600">ACC_Y</span>
-                <span id="hud-ay" class="font-mono text-[10px] text-zinc-400">0.000g</span>
-            </div>
-            <div class="flex flex-col border border-zinc-900 bg-zinc-900/20 p-2">
-                <span class="font-mono text-[8px] text-zinc-600">ACC_Z</span>
-                <span id="hud-az" class="font-mono text-[10px] text-zinc-400">0.000g</span>
+        </div>
+        <!-- IMU Gyroscope -->
+        <div class="mt-2">
+            <div class="font-mono text-[8px] uppercase tracking-widest text-zinc-600 mb-2">GYROSCOPE (°/s)</div>
+            <div class="grid grid-cols-3 gap-2">
+                <div class="flex flex-col border border-zinc-900 bg-zinc-900/20 p-2">
+                    <span class="font-mono text-[8px] text-zinc-600">GX <span class="text-zinc-700">→PITCH</span></span>
+                    <span id="hud-gx" class="font-mono text-[10px] text-red-400/80">0.0</span>
+                </div>
+                <div class="flex flex-col border border-zinc-900 bg-zinc-900/20 p-2">
+                    <span class="font-mono text-[8px] text-zinc-600">GY <span class="text-zinc-700">→ROLL</span></span>
+                    <span id="hud-gy" class="font-mono text-[10px] text-blue-400/80">0.0</span>
+                </div>
+                <div class="flex flex-col border border-zinc-900 bg-zinc-900/20 p-2">
+                    <span class="font-mono text-[8px] text-zinc-600">GZ <span class="text-zinc-700">→YAW</span></span>
+                    <span id="hud-gz" class="font-mono text-[10px] text-green-400/80">0.0</span>
+                </div>
             </div>
         </div>
       </div>

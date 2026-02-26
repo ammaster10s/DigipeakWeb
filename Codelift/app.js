@@ -46,13 +46,19 @@ function updateHUD(data) {
     if (data.imu.ax !== undefined) document.getElementById('hud-ax').textContent = `${data.imu.ax.toFixed(3)} g`;
     if (data.imu.ay !== undefined) document.getElementById('hud-ay').textContent = `${data.imu.ay.toFixed(3)} g`;
     if (data.imu.az !== undefined) document.getElementById('hud-az').textContent = `${data.imu.az.toFixed(3)} g`;
+    if (data.imu.gx !== undefined) document.getElementById('hud-gx').textContent = `${data.imu.gx.toFixed(1)} °/s`;
+    if (data.imu.gy !== undefined) document.getElementById('hud-gy').textContent = `${data.imu.gy.toFixed(1)} °/s`;
+    if (data.imu.gz !== undefined) document.getElementById('hud-gz').textContent = `${data.imu.gz.toFixed(1)} °/s`;
     if (data.imu.t !== undefined) document.getElementById('hud-temp').textContent = `${data.imu.t.toFixed(1)} °C`;
   }
 
   // Update horizon (AHRS)
   const horizon = document.getElementById('horizon');
   if (horizon && data.r !== undefined && data.p !== undefined) {
-    horizon.style.transform = `rotate(${data.p}deg) translateY(${data.r * 0.5}px)`;
+    // r = roll (right side down = +), p = pitch (nose up = +)
+    // Roll: negate so right-tilt = horizon tilts left (like real AHRS)
+    // Pitch: negate so nose-up = horizon moves down (see more sky)
+    horizon.style.transform = `rotate(${-data.r}deg) translateY(${data.p * 1.5}px)`;
   }
 }
 

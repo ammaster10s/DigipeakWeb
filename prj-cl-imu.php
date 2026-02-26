@@ -370,31 +370,31 @@ include __DIR__ . "/php/partials/header.php";
         </div>
       </div>
 
-      <!-- Accel -->
+      <!-- Accel (raw chip axes — X→Roll, Y/Z→Pitch per MPU6050 mounting) -->
       <div class="panel-section">
         <div class="panel-section-title">Accelerometer (g)</div>
         <div class="sensor-grid">
-          <div class="sensor-cell"><div class="label">ACC_X</div><div class="value gx" id="valAx">0.000</div></div>
-          <div class="sensor-cell"><div class="label">ACC_Y</div><div class="value gy" id="valAy">0.000</div></div>
-          <div class="sensor-cell"><div class="label">ACC_Z</div><div class="value gz" id="valAz">0.000</div></div>
+          <div class="sensor-cell"><div class="label">AX <span style="color:#52525b;font-size:7px;">→ROLL</span></div><div class="value gx" id="valAx">0.000</div></div>
+          <div class="sensor-cell"><div class="label">AY <span style="color:#52525b;font-size:7px;">→PITCH</span></div><div class="value gy" id="valAy">0.000</div></div>
+          <div class="sensor-cell"><div class="label">AZ <span style="color:#52525b;font-size:7px;">→PITCH</span></div><div class="value gz" id="valAz">0.000</div></div>
         </div>
       </div>
 
-      <!-- Gyro Bars -->
+      <!-- Gyro Bars (chip axes — GX→Pitch rate, GY→Roll rate, GZ→Yaw rate) -->
       <div class="panel-section">
         <div class="panel-section-title">Gyroscope (°/s)</div>
         <div class="bar-row">
-          <div class="bar-label gx">GX</div>
+          <div class="bar-label gx">GX<span style="color:#3f3f46;font-size:7px;display:block;">PITCH</span></div>
           <div class="bar-track"><div class="bar-center"></div><div class="bar-fill" id="barGx" style="background:#ef4444;left:50%;width:0;"></div></div>
           <div class="bar-val" id="valGx">0.0</div>
         </div>
         <div class="bar-row">
-          <div class="bar-label gy">GY</div>
+          <div class="bar-label gy">GY<span style="color:#3f3f46;font-size:7px;display:block;">ROLL</span></div>
           <div class="bar-track"><div class="bar-center"></div><div class="bar-fill" id="barGy" style="background:#3b82f6;left:50%;width:0;"></div></div>
           <div class="bar-val" id="valGy">0.0</div>
         </div>
         <div class="bar-row">
-          <div class="bar-label gz">GZ</div>
+          <div class="bar-label gz">GZ<span style="color:#3f3f46;font-size:7px;display:block;">YAW</span></div>
           <div class="bar-track"><div class="bar-center"></div><div class="bar-fill" id="barGz" style="background:#22c55e;left:50%;width:0;"></div></div>
           <div class="bar-val" id="valGz">0.0</div>
         </div>
@@ -404,10 +404,10 @@ include __DIR__ . "/php/partials/header.php";
       <div class="panel-section">
         <div class="panel-section-title">Motor Layout</div>
         <div class="motor-grid">
-          <div class="motor-cell"><div class="motor-num">1</div><div class="motor-info"><div class="motor-label">FRONT-LEFT</div><div class="motor-val" id="m1val">--</div></div></div>
-          <div class="motor-cell"><div class="motor-num">2</div><div class="motor-info"><div class="motor-label">FRONT-RIGHT</div><div class="motor-val" id="m2val">--</div></div></div>
-          <div class="motor-cell"><div class="motor-num">3</div><div class="motor-info"><div class="motor-label">REAR-LEFT</div><div class="motor-val" id="m3val">--</div></div></div>
-          <div class="motor-cell"><div class="motor-num">4</div><div class="motor-info"><div class="motor-label">REAR-RIGHT</div><div class="motor-val" id="m4val">--</div></div></div>
+          <div class="motor-cell"><div class="motor-num">1</div><div class="motor-info"><div class="motor-label">FL · GPIO4 · CW ↻</div><div class="motor-val" id="m1val">--</div></div></div>
+          <div class="motor-cell"><div class="motor-num">2</div><div class="motor-info"><div class="motor-label">FR · GPIO5 · CCW ↺</div><div class="motor-val" id="m2val">--</div></div></div>
+          <div class="motor-cell"><div class="motor-num">3</div><div class="motor-info"><div class="motor-label">RL · GPIO6 · CCW ↺</div><div class="motor-val" id="m3val">--</div></div></div>
+          <div class="motor-cell"><div class="motor-num">4</div><div class="motor-info"><div class="motor-label">RR · GPIO7 · CW ↻</div><div class="motor-val" id="m4val">--</div></div></div>
         </div>
       </div>
 
@@ -534,18 +534,21 @@ function onTelemetry(event) {
     }
     lastPacketTime = now;
 
-    // Extract orientation (X/Y swapped to match IMU physical orientation)
-    if (d.r !== undefined) pitch = d.r;
-    if (d.p !== undefined) roll = d.p;
-    if (d.y !== undefined) yaw = -d.y; // TEMP: negate yaw — fix in firmware then remove minus
+    // Firmware sends computed drone axes: r=roll, p=pitch, y=yaw
+    // Roll: +right side down | Pitch: +nose up | Yaw: +clockwise from above
+    if (d.r !== undefined) roll = d.r;
+    if (d.p !== undefined) pitch = d.p;
+    if (d.y !== undefined) yaw = -d.y; // TEMP: negate — firmware yaw sign inverted, fix in FW then remove
 
-    // Extract IMU
+    // Raw IMU chip values (no swap — display as chip axes)
+    // MPU6050 mapping: gx→pitch rate, gy→roll rate, gz→yaw rate
+    // Accel: ax→roll angle, ay+az→pitch angle
     if (d.imu) {
-      if (d.imu.ax !== undefined) accY = d.imu.ax;
-      if (d.imu.ay !== undefined) accX = d.imu.ay;
+      if (d.imu.ax !== undefined) accX = d.imu.ax;
+      if (d.imu.ay !== undefined) accY = d.imu.ay;
       if (d.imu.az !== undefined) accZ = d.imu.az;
-      if (d.imu.gx !== undefined) gyrY = d.imu.gx - calGx;
-      if (d.imu.gy !== undefined) gyrX = d.imu.gy - calGy;
+      if (d.imu.gx !== undefined) gyrX = d.imu.gx - calGx;
+      if (d.imu.gy !== undefined) gyrY = d.imu.gy - calGy;
       if (d.imu.gz !== undefined) gyrZ = d.imu.gz - calGz;
       if (d.imu.t !== undefined) document.getElementById('valTemp').textContent = d.imu.t.toFixed(1) + ' °C';
 
@@ -615,10 +618,11 @@ function updateSensorUI() {
   updateBar('barGy', gyrY, 250);
   updateBar('barGz', gyrZ, 250);
 
-  // Horizon
+  // Horizon — negate roll for correct visual (right tilt = horizon tilts left visually)
+  // Negate pitch: nose-up (+pitch) = horizon drops down = see more sky
   const hz = document.getElementById('horizonBg');
   if (hz) {
-    hz.style.transform = `rotate(${roll}deg) translateY(${pitch * 1.5}px)`;
+    hz.style.transform = `rotate(${-roll}deg) translateY(${pitch * 1.5}px)`;
   }
 }
 
@@ -704,13 +708,13 @@ function drawDrone() {
   const bodySize = droneSize * 0.22;
   const motorR = droneSize * 0.2;
 
-  // Motor positions (X layout — 45° diagonals)
-  // M1=front-left, M2=front-right, M3=rear-left, M4=rear-right
+  // Motor positions (X layout — 45° diagonals) per hardware spec
+  // M1=FL(CW) GPIO4, M2=FR(CCW) GPIO5, M3=RL(CCW) GPIO6, M4=RR(CW) GPIO7
   const motors = [
-    { x: -armLen * 0.707, y: -armLen * 0.707, label: 'M1', color: '#ef4444' },
-    { x:  armLen * 0.707, y: -armLen * 0.707, label: 'M2', color: '#3b82f6' },
-    { x: -armLen * 0.707, y:  armLen * 0.707, label: 'M3', color: '#f59e0b' },
-    { x:  armLen * 0.707, y:  armLen * 0.707, label: 'M4', color: '#22c55e' },
+    { x: -armLen * 0.707, y: -armLen * 0.707, label: 'M1', sub: 'CW', color: '#ef4444' },
+    { x:  armLen * 0.707, y: -armLen * 0.707, label: 'M2', sub: 'CCW', color: '#3b82f6' },
+    { x: -armLen * 0.707, y:  armLen * 0.707, label: 'M3', sub: 'CCW', color: '#f59e0b' },
+    { x:  armLen * 0.707, y:  armLen * 0.707, label: 'M4', sub: 'CW', color: '#22c55e' },
   ];
 
   // --- Draw arms ---
@@ -768,8 +772,9 @@ function drawDrone() {
     ctx.arc(m.x, m.y, motorR, 0, Math.PI * 2);
     ctx.fill();
 
-    // Spinning prop lines (2 blades)
-    const pAngle = propAngle * (i % 2 === 0 ? 1 : -1);
+    // Spinning prop lines (2 blades) — correct spin per spec: M1 CW, M2 CCW, M3 CCW, M4 CW
+    const spinDir = [1, -1, -1, 1][i]; // CW=+1, CCW=-1
+    const pAngle = propAngle * spinDir;
     ctx.strokeStyle = m.color + '40';
     ctx.lineWidth = 2;
     for (let b = 0; b < 2; b++) {
@@ -780,12 +785,16 @@ function drawDrone() {
       ctx.stroke();
     }
 
-    // Motor label
+    // Motor label + rotation indicator
     ctx.fillStyle = m.color;
     ctx.font = `bold 11px 'JetBrains Mono', monospace`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText(m.label, m.x, m.y);
+    ctx.fillText(m.label, m.x, m.y - 6);
+    ctx.font = `8px 'JetBrains Mono', monospace`;
+    ctx.globalAlpha = 0.5;
+    ctx.fillText(m.sub, m.x, m.y + 7);
+    ctx.globalAlpha = 1.0;
   });
 
   // --- Front direction arrow ---
@@ -920,15 +929,21 @@ let demoTime = 0;
 function demoTick() {
   if (!isConnected) {
     demoTime += 0.01;
-    roll = Math.sin(demoTime * 0.7) * 15;
-    pitch = Math.sin(demoTime * 0.5 + 1) * 10;
-    yaw = Math.sin(demoTime * 0.3) * 20;
-    accX = Math.sin(demoTime) * 0.1;
-    accY = Math.cos(demoTime * 0.8) * 0.1;
-    accZ = 0.98 + Math.sin(demoTime * 1.5) * 0.02;
-    gyrX = Math.sin(demoTime * 2) * 5;
-    gyrY = Math.cos(demoTime * 1.5) * 5;
-    gyrZ = Math.sin(demoTime * 0.8) * 3;
+    // Realistic demo values matching actual sensor ranges
+    // Roll: ±15° gentle sway (right side down = +)
+    roll = Math.sin(demoTime * 0.7) * 8;
+    // Pitch: ±10° gentle sway (nose up = +)
+    pitch = Math.sin(demoTime * 0.5 + 1) * 5;
+    // Yaw: slow heading drift (clockwise = +)
+    yaw = demoTime * 3 % 360;
+    // Accel: near-level with slight movement
+    accX = Math.sin(demoTime * 0.7) * 0.05;   // ax → roll component
+    accY = Math.sin(demoTime * 0.5) * 0.03;   // ay → pitch component
+    accZ = 0.98 + Math.sin(demoTime * 1.5) * 0.01; // az ≈ 1g at rest
+    // Gyro: small angular rates (°/s)
+    gyrX = Math.sin(demoTime * 0.5) * 2;  // gx → pitch rate
+    gyrY = Math.sin(demoTime * 0.7) * 3;  // gy → roll rate
+    gyrZ = Math.sin(demoTime * 0.3) * 1;  // gz → yaw rate
     updateSensorUI();
   }
   setTimeout(demoTick, 50);
