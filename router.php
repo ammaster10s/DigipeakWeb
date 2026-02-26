@@ -87,3 +87,5 @@ echo '.c{text-align:center;}.e{color:#ef4444;font-size:48px;font-weight:bold;}.m
 echo '<body><div class="c"><div class="e">404</div><div class="m">ROUTE_NOT_FOUND: ' . htmlspecialchars($uri) . '</div>';
 echo '<div class="m" style="margin-top:24px"><a href="/">← RETURN TO BASE</a></div></div></body></html>';
 return true;
+
+
