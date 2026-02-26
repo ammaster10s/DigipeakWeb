@@ -52,7 +52,7 @@ function updateHUD(data) {
   // Update horizon (AHRS)
   const horizon = document.getElementById('horizon');
   if (horizon && data.r !== undefined && data.p !== undefined) {
-    horizon.style.transform = `rotate(${data.r}deg) translateY(${data.p * 0.5}px)`;
+    horizon.style.transform = `rotate(${data.p}deg) translateY(${data.r * 0.5}px)`;
   }
 }
 
