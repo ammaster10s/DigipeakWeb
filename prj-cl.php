@@ -22,7 +22,7 @@ include __DIR__ . "/php/partials/header.php";
     </p>
     <div class="pt-4">
       <a
-        href="/prj-cl-ide.php"
+        href="/Codelift-IDE"
         class="inline-flex items-center gap-3 border border-red-600 bg-red-600/5 px-6 py-3 font-mono text-sm uppercase tracking-widest text-red-500 transition-all hover:bg-red-600 hover:text-white"
       >
         <span class="relative flex h-2 w-2">

@@ -6,7 +6,7 @@ include __DIR__ . "/php/partials/header.php";
 
 <div class="grid h-[80vh] grid-cols-1 gap-4 p-4 md:grid-cols-4 md:grid-rows-2">
   <a
-    href="/prj-gt.php"
+    href="/PRJ-GT"
     class="group relative col-span-1 overflow-hidden border border-zinc-800 bg-zinc-900 transition-colors hover:border-red-600 md:col-span-2 md:row-span-2"
   >
     <div class="absolute inset-0 bg-[url('/public/GhostTracker_Render.png')] bg-cover bg-center opacity-45 grayscale transition-all group-hover:opacity-70 group-hover:grayscale-0"></div>
@@ -18,7 +18,7 @@ include __DIR__ . "/php/partials/header.php";
   </a>
 
   <a
-    href="/prj-cl.php"
+    href="/PRJ-CL"
     class="group relative col-span-1 overflow-hidden border border-zinc-800 bg-zinc-900 transition-colors hover:border-yellow-500 md:col-span-2"
   >
     <!-- Work in Progress Banner -->
@@ -36,7 +36,7 @@ include __DIR__ . "/php/partials/header.php";
   </a>
 
   <a
-    href="/prj-3ds.php"
+    href="/LOG-3DS"
     class="group relative col-span-1 overflow-hidden border border-zinc-800 bg-zinc-900 transition-colors hover:border-white"
   >
     <div class="absolute inset-0 bg-[url('/public/Kaiklom_3D_printing_2.png')] bg-cover bg-center opacity-70 grayscale transition-all group-hover:opacity-80 group-hover:grayscale-0"></div>
@@ -48,7 +48,7 @@ include __DIR__ . "/php/partials/header.php";
   </a>
 
   <a
-    href="/prj-mrt.php"
+    href="/MOR-AI"
     class="group relative col-span-1 overflow-hidden border border-zinc-800 bg-zinc-900 transition-colors hover:border-white"
   >
     <div class="absolute inset-0 bg-[url('/public/Morintha_Render.png')] bg-cover bg-center opacity-60 grayscale transition-all group-hover:opacity-75 group-hover:grayscale-0"></div>

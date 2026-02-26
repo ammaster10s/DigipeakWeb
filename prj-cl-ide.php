@@ -40,6 +40,10 @@ $saved_blocks_xml = ""; // This would be fetched from a database in a real scena
         <i data-lucide="bluetooth" class="h-3 w-3"></i>
         INITIALIZE LINK
       </button>
+      <a href="/Codelift-IMU" class="group flex items-center gap-2 border border-zinc-800 bg-zinc-900 px-4 py-2 font-mono text-xs uppercase tracking-widest text-zinc-400 transition-all hover:border-cyan-500 hover:text-cyan-400">
+        <i data-lucide="compass" class="h-3 w-3"></i>
+        IMU DIAG
+      </a>
       <button onclick="uploadBLE()" class="group flex items-center gap-2 border border-red-900/50 bg-red-950/10 px-4 py-2 font-mono text-xs uppercase tracking-widest text-red-500 transition-all hover:bg-red-600 hover:text-white">
         <i data-lucide="upload-cloud" class="h-3 w-3"></i>
         UPLOAD MISSION
@@ -656,7 +660,7 @@ $saved_blocks_xml = ""; // This would be fetched from a database in a real scena
       boot.classList.add('boot-hidden');
       setTimeout(() => boot.style.display = 'none', 500);
     }
-  }, 3000);
+  }, 5000);
 </script>
 <!-- Note: Site footer is omitted for full-screen IDE experience to prevent layout shifts -->
 </body>

@@ -22,8 +22,8 @@
               <span>email: digipeak.co@gmail.com</span>
               <span class="hidden text-zinc-700 md:inline">|</span>
               <nav class="flex gap-3 uppercase">
-                <a href="/privacy.php" class="text-zinc-500 hover:text-red-600">PRIVACY</a>
-                <a href="/tos.php" class="text-zinc-500 hover:text-red-600">TOS</a>
+                <a href="/Privacy" class="text-zinc-500 hover:text-red-600">PRIVACY</a>
+                <a href="/ToS" class="text-zinc-500 hover:text-red-600">TOS</a>
               </nav>
             </div>
           </div>

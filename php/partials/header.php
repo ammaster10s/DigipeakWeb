@@ -67,14 +67,14 @@
           class="mx-auto flex max-w-6xl items-center justify-between px-6 py-3 text-sm md:text-base tracking-[0.22em]"
         >
           <a
-            href="/index.php"
+            href="/"
             class="font-mono uppercase text-zinc-200 transition-colors hover:text-red-300"
           >
             DIGIPEAK // OPS-HUD
           </a>
           <nav class="flex gap-6 font-mono text-xs md:text-sm uppercase">
             <a
-              href="/prj-gt.php"
+              href="/PRJ-GT"
               class="relative overflow-hidden text-zinc-400 transition-colors duration-150"
             >
               <span class="group inline-flex items-center gap-1">
@@ -84,7 +84,7 @@
               </span>
             </a>
             <a
-              href="/prj-cl.php"
+              href="/PRJ-CL"
               class="relative overflow-hidden text-zinc-400 transition-colors duration-150"
             >
               <span class="group inline-flex items-center gap-1">
@@ -94,7 +94,7 @@
               </span>
             </a>
             <a
-              href="/prj-mrt.php"
+              href="/MOR-AI"
               class="relative overflow-hidden text-zinc-400 transition-colors duration-150"
             >
               <span class="group inline-flex items-center gap-1">
@@ -104,7 +104,7 @@
               </span>
             </a>
             <a
-              href="/prj-3ds.php"
+              href="/LOG-3DS"
               class="relative overflow-hidden text-zinc-400 transition-colors duration-150"
             >
               <span class="group inline-flex items-center gap-1">

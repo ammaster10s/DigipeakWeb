@@ -87,7 +87,7 @@ include __DIR__ . "/php/partials/header.php";
     overflow: hidden;
   }
 
-  /* 3D Viewport */
+  /* 2D Viewport */
   .viewport {
     position: relative;
     display: flex;
@@ -105,10 +105,6 @@ include __DIR__ . "/php/partials/header.php";
     letter-spacing: 0.2em;
     color: #3f3f46;
     text-transform: uppercase;
-  }
-  .viewport-axes {
-    position: absolute;
-    bottom: 20px; left: 20px;
   }
   .viewport-angles {
     position: absolute;
@@ -345,7 +341,7 @@ include __DIR__ . "/php/partials/header.php";
     <div class="imu-topbar-right">
       <button class="imu-btn" id="btnConnect" onclick="imuConnect()">CONNECT BLE</button>
       <button class="imu-btn" id="btnCalibrate" onclick="calibrateGyro()">CALIBRATE</button>
-      <a href="/prj-cl-ide.php" class="imu-btn danger">← BACK TO IDE</a>
+      <a href="/Codelift-IDE" class="imu-btn danger">← BACK TO IDE</a>
     </div>
   </div>
 
@@ -354,7 +350,7 @@ include __DIR__ . "/php/partials/header.php";
     <!-- 3D Viewport -->
     <div class="viewport" id="viewport3d">
       <canvas id="droneCanvas"></canvas>
-      <div class="viewport-label">3D_ORIENTATION_VIEW</div>
+      <div class="viewport-label">2D_TOP_VIEW</div>
       <div class="viewport-angles">
         <div class="angle-row roll">ROLL <span class="val" id="angRoll">0.0°</span></div>
         <div class="angle-row pitch">PITCH <span class="val" id="angPitch">0.0°</span></div>
@@ -541,7 +537,7 @@ function onTelemetry(event) {
     // Extract orientation (X/Y swapped to match IMU physical orientation)
     if (d.r !== undefined) pitch = d.r;
     if (d.p !== undefined) roll = d.p;
-    if (d.y !== undefined) yaw = d.y;
+    if (d.y !== undefined) yaw = -d.y; // TEMP: negate yaw — fix in firmware then remove minus
 
     // Extract IMU
     if (d.imu) {
@@ -640,10 +636,11 @@ function updateBar(id, value, maxVal) {
 }
 
 // ============================
-// 3D Canvas Drone Renderer
+// 2D Canvas Drone Renderer (Top-Down View)
 // ============================
 const canvas = document.getElementById('droneCanvas');
 const ctx = canvas.getContext('2d');
+let propAngle = 0; // For spinning prop animation
 
 function resizeCanvas() {
   const vp = document.getElementById('viewport3d');
@@ -653,242 +650,267 @@ function resizeCanvas() {
 window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
 
-// Simple 3D math
-function rotateX(p, a) {
-  const c = Math.cos(a), s = Math.sin(a);
-  return [p[0], p[1]*c - p[2]*s, p[1]*s + p[2]*c];
-}
-function rotateY(p, a) {
-  const c = Math.cos(a), s = Math.sin(a);
-  return [p[0]*c + p[2]*s, p[1], -p[0]*s + p[2]*c];
-}
-function rotateZ(p, a) {
-  const c = Math.cos(a), s = Math.sin(a);
-  return [p[0]*c - p[1]*s, p[0]*s + p[1]*c, p[2]];
-}
-
-function project(p, cx, cy, fov) {
-  const scale = fov / (fov + p[2]);
-  return [cx + p[0] * scale, cy - p[1] * scale, scale];
-}
-
-// Drone geometry — arms + body
-function getDroneGeometry(size) {
-  const s = size;
-  const armLen = s * 1.1;
-  const bodyW = s * 0.3;
-  const bodyH = s * 0.08;
-  const motorR = s * 0.25;
-  const armAngle = Math.PI / 4; // 45°
-
-  const arms = [
-    { from: [0,0,0], to: [-armLen * Math.cos(armAngle), armLen * Math.sin(armAngle), 0], motor: 1, color: '#ef4444' },
-    { from: [0,0,0], to: [ armLen * Math.cos(armAngle), armLen * Math.sin(armAngle), 0], motor: 2, color: '#3b82f6' },
-    { from: [0,0,0], to: [-armLen * Math.cos(armAngle),-armLen * Math.sin(armAngle), 0], motor: 3, color: '#f59e0b' },
-    { from: [0,0,0], to: [ armLen * Math.cos(armAngle),-armLen * Math.sin(armAngle), 0], motor: 4, color: '#22c55e' },
-  ];
-
-  // Body frame (rectangle)
-  const body = [
-    [-bodyW, -bodyW, -bodyH],
-    [ bodyW, -bodyW, -bodyH],
-    [ bodyW,  bodyW, -bodyH],
-    [-bodyW,  bodyW, -bodyH],
-    [-bodyW, -bodyW,  bodyH],
-    [ bodyW, -bodyW,  bodyH],
-    [ bodyW,  bodyW,  bodyH],
-    [-bodyW,  bodyW,  bodyH],
-  ];
-
-  // Direction arrow (front indicator)
-  const arrow = [
-    [0, bodyW * 0.5, bodyH + 2],
-    [0, bodyW * 1.8, bodyH + 2],
-  ];
-
-  return { arms, body, motorR, arrow };
-}
-
 function drawDrone() {
   const w = canvas.width, h = canvas.height;
   ctx.clearRect(0, 0, w, h);
 
-  // Grid
-  ctx.strokeStyle = 'rgba(255,255,255,0.03)';
-  ctx.lineWidth = 1;
-  const gridSpacing = 40;
-  for (let x = 0; x < w; x += gridSpacing) {
-    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
-  }
-  for (let y = 0; y < h; y += gridSpacing) {
-    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
-  }
-
   const cx = w / 2, cy = h / 2;
-  const fov = 400;
-  const droneSize = Math.min(w, h) * 0.28;
-  const geo = getDroneGeometry(droneSize);
+  const droneSize = Math.min(w, h) * 0.3;
 
-  // Convert angles to radians
-  const rRad = roll * Math.PI / 180;
-  const pRad = pitch * Math.PI / 180;
-  const yRad = yaw * Math.PI / 180;
-
-  // Transform function: Yaw → Pitch → Roll + slight viewing angle
-  function transform(pt) {
-    let p = [...pt];
-    // Apply drone rotation
-    p = rotateZ(p, yRad);
-    p = rotateX(p, pRad);
-    p = rotateZ(p, rRad);
-    // Viewing angle (tilted slightly)
-    p = rotateX(p, -0.6);
-    p = rotateY(p, 0.3);
-    return p;
+  // --- Background dot grid ---
+  ctx.fillStyle = 'rgba(255,255,255,0.025)';
+  const gridSpacing = 30;
+  for (let x = gridSpacing; x < w; x += gridSpacing) {
+    for (let y = gridSpacing; y < h; y += gridSpacing) {
+      ctx.beginPath();
+      ctx.arc(x, y, 1, 0, Math.PI * 2);
+      ctx.fill();
+    }
   }
 
-  // Draw body wireframe
-  const bodyPts = geo.body.map(pt => {
-    const t = transform(pt);
-    return project(t, cx, cy, fov);
-  });
-
-  ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+  // --- Compass ring ---
+  ctx.strokeStyle = 'rgba(255,255,255,0.04)';
   ctx.lineWidth = 1;
-  // Bottom face
   ctx.beginPath();
-  ctx.moveTo(bodyPts[0][0], bodyPts[0][1]);
-  for (let i = 1; i < 4; i++) ctx.lineTo(bodyPts[i][0], bodyPts[i][1]);
-  ctx.closePath(); ctx.stroke();
-  // Top face
-  ctx.beginPath();
-  ctx.moveTo(bodyPts[4][0], bodyPts[4][1]);
-  for (let i = 5; i < 8; i++) ctx.lineTo(bodyPts[i][0], bodyPts[i][1]);
-  ctx.closePath(); ctx.stroke();
-  // Verticals
-  for (let i = 0; i < 4; i++) {
-    ctx.beginPath();
-    ctx.moveTo(bodyPts[i][0], bodyPts[i][1]);
-    ctx.lineTo(bodyPts[i+4][0], bodyPts[i+4][1]);
-    ctx.stroke();
-  }
-
-  // Fill top face with semi-transparent
-  ctx.fillStyle = 'rgba(30,35,50,0.6)';
-  ctx.beginPath();
-  ctx.moveTo(bodyPts[4][0], bodyPts[4][1]);
-  for (let i = 5; i < 8; i++) ctx.lineTo(bodyPts[i][0], bodyPts[i][1]);
-  ctx.closePath(); ctx.fill();
-
-  // Draw arms and motors
-  geo.arms.forEach(arm => {
-    const from3d = transform(arm.from);
-    const to3d = transform(arm.to);
-    const fromP = project(from3d, cx, cy, fov);
-    const toP = project(to3d, cx, cy, fov);
-
-    // Arm line
-    ctx.strokeStyle = arm.color + '90';
-    ctx.lineWidth = 2.5 * toP[2];
-    ctx.beginPath();
-    ctx.moveTo(fromP[0], fromP[1]);
-    ctx.lineTo(toP[0], toP[1]);
-    ctx.stroke();
-
-    // Motor circle
-    const motorRadius = geo.motorR * toP[2];
-    ctx.strokeStyle = arm.color;
-    ctx.lineWidth = 1.5;
-    ctx.beginPath();
-    ctx.arc(toP[0], toP[1], motorRadius, 0, Math.PI * 2);
-    ctx.stroke();
-
-    // Motor glow
-    const grad = ctx.createRadialGradient(toP[0], toP[1], 0, toP[0], toP[1], motorRadius);
-    grad.addColorStop(0, arm.color + '25');
-    grad.addColorStop(1, 'transparent');
-    ctx.fillStyle = grad;
-    ctx.fill();
-
-    // Motor number label
-    ctx.fillStyle = arm.color;
-    ctx.font = `bold ${Math.round(11 * toP[2])}px 'JetBrains Mono', monospace`;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText('M' + arm.motor, toP[0], toP[1]);
-  });
-
-  // Direction arrow (front)
-  const arrowPts = geo.arrow.map(pt => {
-    const t = transform(pt);
-    return project(t, cx, cy, fov);
-  });
-  ctx.strokeStyle = '#ef4444';
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.moveTo(arrowPts[0][0], arrowPts[0][1]);
-  ctx.lineTo(arrowPts[1][0], arrowPts[1][1]);
-  ctx.stroke();
-  // Arrowhead
-  const dx = arrowPts[1][0] - arrowPts[0][0];
-  const dy = arrowPts[1][1] - arrowPts[0][1];
-  const angle = Math.atan2(dy, dx);
-  const headLen = 10;
-  ctx.beginPath();
-  ctx.moveTo(arrowPts[1][0], arrowPts[1][1]);
-  ctx.lineTo(arrowPts[1][0] - headLen * Math.cos(angle - 0.4), arrowPts[1][1] - headLen * Math.sin(angle - 0.4));
-  ctx.moveTo(arrowPts[1][0], arrowPts[1][1]);
-  ctx.lineTo(arrowPts[1][0] - headLen * Math.cos(angle + 0.4), arrowPts[1][1] - headLen * Math.sin(angle + 0.4));
+  ctx.arc(cx, cy, droneSize * 1.6, 0, Math.PI * 2);
   ctx.stroke();
 
-  // "FRONT" label
-  ctx.fillStyle = 'rgba(239,68,68,0.5)';
+  // Compass ticks
+  ctx.fillStyle = 'rgba(255,255,255,0.15)';
   ctx.font = "9px 'JetBrains Mono', monospace";
   ctx.textAlign = 'center';
-  ctx.fillText('FRONT', arrowPts[1][0], arrowPts[1][1] - 12);
+  ctx.textBaseline = 'middle';
+  const dirs = ['N', 'E', 'S', 'W'];
+  for (let i = 0; i < 4; i++) {
+    const a = (i * Math.PI / 2) - Math.PI / 2;
+    const r = droneSize * 1.6;
+    const tx = cx + Math.cos(a) * (r + 14);
+    const ty = cy + Math.sin(a) * (r + 14);
+    ctx.fillText(dirs[i], tx, ty);
+    // Small tick
+    ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+    ctx.beginPath();
+    ctx.moveTo(cx + Math.cos(a) * (r - 4), cy + Math.sin(a) * (r - 4));
+    ctx.lineTo(cx + Math.cos(a) * (r + 4), cy + Math.sin(a) * (r + 4));
+    ctx.stroke();
+  }
 
-  // Draw axis reference in bottom-left
-  drawAxisRef(60, h - 60);
+  // --- Save context and apply yaw rotation ---
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate(yaw * Math.PI / 180);
 
-  requestAnimationFrame(drawDrone);
-}
+  const armLen = droneSize * 1.0;
+  const bodySize = droneSize * 0.22;
+  const motorR = droneSize * 0.2;
 
-function drawAxisRef(cx, cy) {
-  const len = 35;
-  const rRad = roll * Math.PI / 180;
-  const pRad = pitch * Math.PI / 180;
-  const yRad = yaw * Math.PI / 180;
-
-  const axes = [
-    { v: [len, 0, 0], label: 'X', color: '#ef4444' },
-    { v: [0, len, 0], label: 'Y', color: '#3b82f6' },
-    { v: [0, 0, len], label: 'Z', color: '#22c55e' },
+  // Motor positions (X layout — 45° diagonals)
+  // M1=front-left, M2=front-right, M3=rear-left, M4=rear-right
+  const motors = [
+    { x: -armLen * 0.707, y: -armLen * 0.707, label: 'M1', color: '#ef4444' },
+    { x:  armLen * 0.707, y: -armLen * 0.707, label: 'M2', color: '#3b82f6' },
+    { x: -armLen * 0.707, y:  armLen * 0.707, label: 'M3', color: '#f59e0b' },
+    { x:  armLen * 0.707, y:  armLen * 0.707, label: 'M4', color: '#22c55e' },
   ];
 
-  axes.forEach(ax => {
-    let p = [...ax.v];
-    p = rotateZ(p, yRad);
-    p = rotateX(p, pRad);
-    p = rotateZ(p, rRad);
-    p = rotateX(p, -0.6);
-    p = rotateY(p, 0.3);
-
-    const proj = project(p, cx, cy, 200);
-    ctx.strokeStyle = ax.color;
-    ctx.lineWidth = 2;
+  // --- Draw arms ---
+  motors.forEach(m => {
+    ctx.strokeStyle = m.color + '50';
+    ctx.lineWidth = 3;
     ctx.beginPath();
-    ctx.moveTo(cx, cy);
-    ctx.lineTo(proj[0], proj[1]);
+    ctx.moveTo(0, 0);
+    ctx.lineTo(m.x, m.y);
     ctx.stroke();
 
-    ctx.fillStyle = ax.color;
-    ctx.font = "bold 10px 'JetBrains Mono', monospace";
+    // Arm glow
+    ctx.strokeStyle = m.color + '15';
+    ctx.lineWidth = 8;
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(m.x, m.y);
+    ctx.stroke();
+  });
+
+  // --- Draw center body ---
+  ctx.fillStyle = 'rgba(25,28,40,0.9)';
+  ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  const br = 4; // border radius
+  ctx.roundRect(-bodySize, -bodySize, bodySize * 2, bodySize * 2, br);
+  ctx.fill();
+  ctx.stroke();
+
+  // Center cross
+  ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(-bodySize * 0.6, 0); ctx.lineTo(bodySize * 0.6, 0);
+  ctx.moveTo(0, -bodySize * 0.6); ctx.lineTo(0, bodySize * 0.6);
+  ctx.stroke();
+
+  // --- Draw motors ---
+  propAngle += 0.15;
+  motors.forEach((m, i) => {
+    // Motor circle
+    ctx.strokeStyle = m.color + 'aa';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(m.x, m.y, motorR, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // Inner glow
+    const grad = ctx.createRadialGradient(m.x, m.y, 0, m.x, m.y, motorR);
+    grad.addColorStop(0, m.color + '18');
+    grad.addColorStop(1, 'transparent');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(m.x, m.y, motorR, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Spinning prop lines (2 blades)
+    const pAngle = propAngle * (i % 2 === 0 ? 1 : -1);
+    ctx.strokeStyle = m.color + '40';
+    ctx.lineWidth = 2;
+    for (let b = 0; b < 2; b++) {
+      const ba = pAngle + b * Math.PI;
+      ctx.beginPath();
+      ctx.moveTo(m.x + Math.cos(ba) * motorR * 0.3, m.y + Math.sin(ba) * motorR * 0.3);
+      ctx.lineTo(m.x + Math.cos(ba) * motorR * 0.85, m.y + Math.sin(ba) * motorR * 0.85);
+      ctx.stroke();
+    }
+
+    // Motor label
+    ctx.fillStyle = m.color;
+    ctx.font = `bold 11px 'JetBrains Mono', monospace`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    const lx = proj[0] + (proj[0] - cx) * 0.25;
-    const ly = proj[1] + (proj[1] - cy) * 0.25;
-    ctx.fillText(ax.label, lx, ly);
+    ctx.fillText(m.label, m.x, m.y);
   });
+
+  // --- Front direction arrow ---
+  const arrowStart = -bodySize - 6;
+  const arrowEnd = -armLen * 0.35;
+  ctx.strokeStyle = '#ef4444';
+  ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  ctx.moveTo(0, arrowStart);
+  ctx.lineTo(0, arrowEnd);
+  ctx.stroke();
+
+  // Arrowhead
+  const headLen = 10;
+  ctx.beginPath();
+  ctx.moveTo(0, arrowEnd);
+  ctx.lineTo(-headLen * 0.5, arrowEnd + headLen);
+  ctx.moveTo(0, arrowEnd);
+  ctx.lineTo(headLen * 0.5, arrowEnd + headLen);
+  ctx.stroke();
+
+  // FRONT label
+  ctx.fillStyle = 'rgba(239,68,68,0.6)';
+  ctx.font = "bold 10px 'JetBrains Mono', monospace";
+  ctx.textAlign = 'center';
+  ctx.fillText('FRONT', 0, arrowEnd - 10);
+
+  ctx.restore(); // End yaw rotation
+
+  // =========================================
+  // Roll & Pitch tilt indicator bars (fixed, not rotated)
+  // =========================================
+
+  // --- Roll bar (bottom, horizontal) ---
+  const barLen = droneSize * 1.4;
+  const barY = cy + droneSize * 1.85;
+  const rollPx = (roll / 45) * (barLen / 2); // ±45° maps to bar width
+
+  // Track
+  ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(cx - barLen / 2, barY);
+  ctx.lineTo(cx + barLen / 2, barY);
+  ctx.stroke();
+
+  // Center tick
+  ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+  ctx.beginPath();
+  ctx.moveTo(cx, barY - 5);
+  ctx.lineTo(cx, barY + 5);
+  ctx.stroke();
+
+  // Fill
+  ctx.fillStyle = '#ef4444';
+  const rollBarW = Math.abs(rollPx);
+  const rollBarX = rollPx >= 0 ? cx : cx - rollBarW;
+  ctx.fillRect(rollBarX, barY - 3, rollBarW, 6);
+
+  // Indicator dot
+  ctx.fillStyle = '#ef4444';
+  ctx.shadowColor = '#ef4444';
+  ctx.shadowBlur = 8;
+  ctx.beginPath();
+  ctx.arc(cx + rollPx, barY, 5, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.shadowBlur = 0;
+
+  // Label
+  ctx.fillStyle = '#ef4444';
+  ctx.font = "bold 9px 'JetBrains Mono', monospace";
+  ctx.textAlign = 'center';
+  ctx.fillText('ROLL', cx, barY + 20);
+
+  // --- Pitch bar (left side, vertical) ---
+  const pitchBarX = cx - droneSize * 1.85;
+  const pitchPx = (pitch / 45) * (barLen / 2);
+
+  // Track
+  ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(pitchBarX, cy - barLen / 2);
+  ctx.lineTo(pitchBarX, cy + barLen / 2);
+  ctx.stroke();
+
+  // Center tick
+  ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+  ctx.beginPath();
+  ctx.moveTo(pitchBarX - 5, cy);
+  ctx.lineTo(pitchBarX + 5, cy);
+  ctx.stroke();
+
+  // Fill
+  ctx.fillStyle = '#3b82f6';
+  const pitchBarH = Math.abs(pitchPx);
+  const pitchBarY = pitchPx >= 0 ? cy : cy - pitchBarH;
+  ctx.fillRect(pitchBarX - 3, pitchBarY, 6, pitchBarH);
+
+  // Indicator dot
+  ctx.fillStyle = '#3b82f6';
+  ctx.shadowColor = '#3b82f6';
+  ctx.shadowBlur = 8;
+  ctx.beginPath();
+  ctx.arc(pitchBarX, cy + pitchPx, 5, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.shadowBlur = 0;
+
+  // Label
+  ctx.save();
+  ctx.translate(pitchBarX - 18, cy);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillStyle = '#3b82f6';
+  ctx.font = "bold 9px 'JetBrains Mono', monospace";
+  ctx.textAlign = 'center';
+  ctx.fillText('PITCH', 0, 0);
+  ctx.restore();
+
+  // --- Yaw indicator (top) ---
+  ctx.fillStyle = '#22c55e';
+  ctx.font = "bold 9px 'JetBrains Mono', monospace";
+  ctx.textAlign = 'center';
+  ctx.fillText('YAW ' + yaw.toFixed(1) + '°', cx, cy - droneSize * 1.85);
+
+  requestAnimationFrame(drawDrone);
 }
 
 // ============================

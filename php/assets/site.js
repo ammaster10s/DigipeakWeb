@@ -8,20 +8,36 @@ function runBootLoader() {
 
   if (!boot || !progressBar || !progressValue) return;
 
-  const hasLoaded = sessionStorage.getItem("digipeak_boot_complete") === "1";
-  if (hasLoaded) {
+  // Determine if we should show the boot animation
+  const isFirstVisit = sessionStorage.getItem("digipeak_boot_complete") !== "1";
+  const path = window.location.pathname.toLowerCase();
+  const isIDEPage = path.includes("prj-cl-ide") || path.includes("codelift-ide");
+
+  // Show boot on: first site visit OR IDE pages
+  if (!isFirstVisit && !isIDEPage) {
     boot.style.display = "none";
     return;
   }
 
+  // Mark first visit as done (won't affect IDE pages which always play)
+  if (isFirstVisit) {
+    sessionStorage.setItem("digipeak_boot_complete", "1");
+  }
+
+  // Reset to visible state
+  boot.style.display = "";
+  boot.style.opacity = "1";
+  boot.classList.remove("boot-hidden");
+  progressBar.style.width = "0%";
+  progressValue.textContent = "[0%]";
+
   let finished = false;
-  const duration = 2200;
+  const duration = isIDEPage ? 1500 : 1800; // slightly shorter for IDE
   const start = performance.now();
 
   const finalize = () => {
     if (finished) return;
     finished = true;
-    sessionStorage.setItem("digipeak_boot_complete", "1");
     boot.classList.add("boot-hidden");
     setTimeout(() => {
       boot.style.display = "none";
