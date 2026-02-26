@@ -186,8 +186,13 @@ function initInView() {
   targets.forEach((el) => observer.observe(el));
 }
 
+// Boot loader MUST start immediately — don't wait for DOMContentLoaded
+// (header.php outputs boot-loader HTML before site.js loads, so elements exist)
+// Waiting for DOMContentLoaded causes "stuck at 0%" because heavy scripts (Blockly CDN) block it
+runBootLoader();
+
+// Other init functions can wait for full DOM
 document.addEventListener("DOMContentLoaded", () => {
-  runBootLoader();
   initScramble();
   initGallery();
   initMassCalculator();
