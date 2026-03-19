@@ -1,4 +1,12 @@
 <?php
+$requestPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
+
+// Defensive route handoff for environments where PHP falls back to index.php.
+if ($requestPath !== '/' && $requestPath !== '/index.php') {
+  require __DIR__ . '/router.php';
+  return;
+}
+
 $pageTitle = "DIGIPEAK OPS // HOME";
 $pageDescription = "Defense-tech interface for high-precision drone engineering.";
 include __DIR__ . "/php/partials/header.php";
