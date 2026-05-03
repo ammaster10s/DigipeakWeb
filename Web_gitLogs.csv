@@ -1,0 +1,53 @@
+"2026-03-30","Add Netlify config and SPA redirects","Add netlify.toml to configure Netlify build (base: codelift-v2, publish: dist, command: npm run build) and add codelift-v2/public/_redirects to route all requests to /index.html (200) for SPA client-side routing. Update .gitignore to ignore the local .netlify folder and add a comment.
+"
+"2026-03-30","Migrate Codelift to new codelift-v2 frontend","Remove legacy PHP/HTML Codelift site and documentation and add a new codelift-v2 React/Vite frontend. Deleted old Codelift directory files (docs, blocks/generator/app scripts, README, protocol docs), site PHP pages/partials, and .htaccess routing. Added codelift-v2 project including package.json, Vite/Tailwind configs, source components, assets, and supporting frontend files to replace the previous implementation.
+"
+"2026-03-19","Add generated JSON docs and basic router handoff","Update BLOCKS_DOCUMENTATION.md to include a "Generated JSON" / expression column for many block categories (Flight Control, Navigation, Logic, Loops, Sensors, Vision AI, Safety), mapping visual blocks to their runtime JSON or telemetry expressions. Modify index.php to parse the request path and defensively hand off non-root requests to router.php to avoid PHP falling back to index.php.
+"
+"2026-02-26","Update IMU HUD, axis mapping and drone visuals","Add gyroscope HUD values and unit formatting; reorganize IMU sections in the IDE with clearer labels, colors and axis→control hints. Clarify and correct axis mappings in telemetry handling (assign roll/pitch/yaw and raw IMU axes consistently), negate horizon roll/pitch transforms for correct AHRS visual, and keep a temporary yaw negation note for firmware fix. Enhance drone drawing: annotate motor labels with GPIO/rotation, set per-motor spin directions, draw rotation sublabels, and adjust prop spin logic. Tweak demo sensor values to more realistic ranges for accelerometer and gyro outputs.
+"
+"2026-02-26","Fix boot animation on production",""
+"2026-02-26","Create .htaccess",""
+"2026-02-26","Update router.php",""
+"2026-02-26","Add router, clean URLs and UI/IMU updates","Introduce a lightweight router and switch the site to clean/case-insensitive URLs, updating header/footer/index and project links to use paths like /PRJ-CL, /Codelift-IDE, /Codelift-IMU, /MOR-AI and /LOG-3DS. Add router.php for the built-in PHP server to map those routes to the existing PHP files and to serve static assets.
+
+Polish client behavior and IDE/IMU pages:
+- site.js: refine boot animation logic to only hide on repeat visits (stores digipeak_boot_complete), always allow boot on IDE pages, adjust durations and reset visual state when shown.
+- prj-cl-ide.php: add an "IMU DIAG" link to open the IMU page, and extend the boot hide timeout for the full-screen IDE experience.
+- prj-cl.php and prj-cl-imu.php: update internal links to the new clean URLs (Codelift-IDE/Codelift-IMU) and change some labels.
+
+prj-cl-imu.php rendering changes:
+- Replace the old 3D canvas renderer with a 2D top-down view and new HUD: compass ring, motors/arms, spinning prop visuals, roll/pitch bars and yaw readout.
+- Temporarily negate incoming yaw (commented as TEMP) until firmware is fixed.
+- Minor CSS/comment updates reflecting 2D viewport.
+
+Overall: enables clean routing and improves UX for IDE/IMU pages and boot animation behavior.
+"
+"2026-02-26","Add IMU diagnostics page; fix horizon transform","Add prj-cl-imu.php: a full IMU diagnostics UI with styles and client-side JS for BLE telemetry (service/characteristics), telemetry parsing, calibration, motor/battery/temp readouts, artificial horizon, 2D/3D drone renderer on canvas, demo mode and event logging. Also fix a bug in Codelift/app.js where the horizon transform used the wrong axis values (swap roll/pitch mapping) so the artificial horizon now rotates and translates with the correct fields.
+"
+"2026-02-24","Add Dev Terminal & Protocol Preview UI","Replace the previous JSON preview details with a tabbed Protocol Preview / Developer Terminal UI and implement the client-side logic. Adds UI: tab header, protocol preview textarea, developer terminal panel with log output, command input, TX button, quick motor/safety command buttons and a CLEAR control. Adds JS features: tab switching, dev logging with timestamp and color coding, HTML-escaping helper, clearDevLog, sendRawBLE (connection checks, chunked writes, error handling), sendDevCmd, quickCmd, command-history navigation (↑/↓) and keyboard handling. Also forwards throttled telemetry from updateHUD into the dev log when the dev panel is visible. Exposes helper functions (switchDevTab, sendDevCmd, quickCmd, handleDevKey, clearDevLog) on window for integration.
+"
+"2026-02-13","Rebrand 3D service page and add specs","Update prj-3ds.php to rebrand the offering as “Kaiklom Printing”: adjust header copy and accent color, replace the machine/spec table with a service-oriented materials → properties/price/use-case table, and add a “How to Order” instructions block. Restore the project showcase by replacing placeholder blocks with two poster images and include the new image assets (public/Poster_Kaiklom_1.png, public/Poster_Kaiklom_2.png). No backend logic changes were made.
+"
+"2026-02-13","Tweak tile image opacity; hide 3D-print block","Increase background image opacity and hover visibility for several project tiles on index.php (Ghost Tracker, 3D Printing, Morintha AI) to make thumbnails more visible. Temporarily comment out the "VINTAGE RESTORATION // 3D SCAN VS PRINT" grid block in prj-3ds.php to remove that section from the page while it's being updated.
+"
+"2026-02-13","Add project renders and UI updates","Replace placeholder backgrounds with three new render assets and tweak project tile markup/styles for better visuals. index.php now uses GhostTracker_Render, Kaiklom_3D_printing_2, and Morintha_Render as bg images (bg-cover/bg-center, opacity/grayscale transitions, overflow-hidden) and adds a centered "Work in Progress" banner for the CODELIFT card. Also wraps content in relative/padded containers to ensure overlays and hover effects render correctly. Added the three PNG assets under public/.
+"
+"2026-02-13","Update prj-cl-ide.php",""
+"2026-02-13","Guard Blockly theme; add IDE bootstrap fixes","Protect against missing Blockly.Themes by using a conditional theme assignment in Codelift/app.js to avoid runtime errors. In prj-cl-ide.php close the main tag emitted by header.php, load /php/assets/site.js earlier to handle the IDE boot sequence, and add a fail-safe script that hides the boot loader after 3s if site.js fails — preventing layout issues in the full-screen IDE.
+"
+"2026-02-13","Update prj-cl-ide.php",""
+"2026-02-13","Hide Blockly scrollbars and restyle flyout","Add CSS to aggressively hide all scrollbars and scrollbar handles in the Blockly toolbox/flyout across browsers (scrollbar-width for Firefox, -ms-overflow-style for IE/Edge, ::-webkit-scrollbar for WebKit). Also remove scrollbar visuals (display/visibility/opacity/pointer-events) and adjust the flyout background fill/opacity/stroke for a consistent dark appearance. These UI tweaks remove visible scrollbars in the IDE's blockly toolbox for a cleaner look.
+"
+"2026-02-13","Add Codelift Blockly drone IDE","Add a new Codelift Blockly-based drone IDE under /Codelift. Includes core frontend (index.html, index.php), Blockly definitions (blocks.js), JSON generator (generator.js), app logic (app.js) with BLE upload/simulation, and a PHP integration layer (PHP_INTEGRATION_GUIDE.md, api/save_mission.php, prj-cl-ide.php). Also add extensive documentation and protocol specs (README.md, PROTOCOL.md, COMMAND_REFERENCE.md, BLOCKS_DOCUMENTATION.md, ALTITUDE_ESTIMATION.md) and basic .gitattributes/.gitignore. Minor update made to prj-cl.php.
+"
+"2026-02-10","Update footer.php",""
+"2026-02-10","Update README.md",""
+"2026-02-10","Chaning Code base to php",""
+"2026-02-09","Register /tos page and refresh dev cache","Add the new /tos page to the app paths and generate its client-reference manifest; update server source map and prerender preview keys. The dev build artifacts were refreshed (turbopack LOG/CURRENT, image cache entries removed/updated) and development logs changed due to the rebuild.
+"
+"2026-02-09","Add .next to .gitignore and remove cache","Ignore Next.js build artifacts and local files by adding .next, .DS_Store, and .env to .gitignore. Remove many Turbopack cache files under .next/dev/cache/turbopack and update the CURRENT/LOG files to reflect compaction and deletions, keeping the repository free of generated cache data.
+"
+"2026-02-09","Add necessary pages and pictures",""
+"2026-02-09","Initial Commit, Code generate by Cursor.ai",""
+"2026-02-09","Initial commit",""
