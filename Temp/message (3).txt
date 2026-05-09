@@ -1,0 +1,598 @@
+import React, { useState, useEffect } from 'react';
+import { 
+  Box, Settings, Zap, Play, AlertTriangle, ChevronRight, Cpu, MousePointer2,
+  Menu, X, Globe, Code, Home, ArrowRight, Terminal, Trash2, Pause, 
+  RotateCw, ArrowUp, Bluetooth, Usb, Eye, Ruler, Split, Navigation, 
+  ShieldCheck, Rocket, ShoppingCart, Tag, Package, CreditCard, ChevronLeft,
+  BookOpen, Clock, Lightbulb, Map, Target, Award, Info, Wrench, GraduationCap,
+  Bot, Satellite, Trophy, RefreshCw, FileText, Medal, MapPin, Users, UserCheck,
+  Palette, Factory, LineChart, Star, ArrowDown, ArrowLeft, RotateCcw, Timer
+} from 'lucide-react';
+
+const App = () => {
+  const [lang, setLang] = useState('en'); 
+  const [view, setView] = useState('home'); 
+  const [selectedCourse, setSelectedCourse] = useState(null); 
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [cart, setCart] = useState([]);
+  
+  const [connection, setConnection] = useState({ type: null, status: 'disconnected', deviceName: '' });
+  const [isScanning, setIsScanning] = useState(false);
+
+  const [workspace, setWorkspace] = useState([]);
+  const [isExecuting, setIsExecuting] = useState(false);
+  const [currentBlockIndex, setCurrentBlockIndex] = useState(-1);
+  const [dronePos, setDronePos] = useState({ x: 0, y: 0, z: 0, rotate: 0, isFlying: false, isFlipping: false });
+  const [sensorData, setSensorData] = useState({ tof: 0, opticalFlow: { vx: 0, vy: 0 } });
+
+  useEffect(() => {
+    const link = document.createElement('link');
+    link.href = 'https://fonts.googleapis.com/css2?family=Schoolbell&family=Mali:wght@400;700&family=Itim&display=swap';
+    link.rel = 'stylesheet';
+    document.head.appendChild(link);
+  }, []);
+
+  const content = {
+    th: {
+      nav: { home: "หน้าแรก", code: "แล็บ", shop: "ร้านค้า", curriculum: "คอร์ส", connect: "ต่อโดรน" },
+      hero: {
+        badge: "ยินดีต้อนรับสู่ Codelift Academy 🎓",
+        title1: "สร้างโดรนตัวแรก",
+        title2: "ด้วยมือคุณเอง",
+        sub: "เรียนรู้ผ่านการลงมือทำจริง ตั้งแต่การประกอบฮาร์ดแวร์ไปจนถึงการเขียนโค้ดอัจฉริยะ",
+        btnStart: "เริ่มเรียนเลย",
+        btnLab: "เข้าสู่ห้องแล็บ"
+      },
+      curriculum: {
+        title: "หลักสูตรนวัตกรโดรน",
+        sub: "12 โมดูลการเรียนรู้ครอบคลุมทักษะแห่งอนาคต",
+        duration: "60 นาทีต่อครั้ง",
+        backBtn: "กลับไปหน้าคอร์ส",
+        headers: { content: "เนื้อหาหลัก", activity: "กิจกรรม", tip: "Expert Tip" },
+        phases: [
+          {
+            name: "Phase 1: Flight Fundamentals",
+            color: "bg-blue-500",
+            courses: [
+              { id: 1, name: "มหัศจรรย์แห่งการบิน", timeline: ["0-15น. รู้จักโดรน", "15-35น. ฟิสิกส์การบิน", "35-50น. ฝึกบิน Simulator", "50-60น. สรุปเนื้อหา"], main: "โดรน Codelift บินได้ด้วยสมดุลของแรง 4 อย่าง: แรงยก, น้ำหนัก, แรงขับ, และแรงต้าน", activity: "ฝึกควบคุมทิศทางผ่าน Simulator จำลองสภาวะลมต้าน", tip: "หัวใจของการบินคือสมดุล หากแรงยกมากกว่าน้ำหนัก โดรนจะลอยขึ้นทันที!" },
+              { id: 2, name: "ชำแหละโดรน (Anatomy)", timeline: ["0-15น. รู้จักบอร์ด", "15-40น. ระบบควบคุม", "40-55น. ต่อสายสัญญาณ", "55-60น. เกม"], main: "โดรนประกอบด้วย: Flight Controller (ESP32-S3), มอเตอร์ CW/CCW, และเซนเซอร์ LiDAR", activity: "สำรวจบอร์ดและทดลองเสียบสายสัญญาณมอเตอร์", tip: "ใบพัด CW/CCW ต้องใส่ให้ถูกด้าน มิฉะนั้นโดรนจะบินไม่ขึ้น" },
+              { id: 3, name: "นักบินมือใหม่ (Safety)", timeline: ["0-15น. กฎความปลอดภัย", "15-45น. ฝึกบินจริง", "45-60น. สรุป"], main: "Pre-flight Checklist: ตรวจ Battery, ใบพัด และพื้นที่ปลอดภัยระยะ 3 เมตร", activity: "ฝึกบินนิ่ง (Hovering) 30 วินาที", tip: "ในเหตุฉุกเฉิน ให้กด Kill Switch ทันที!" }
+            ]
+          },
+          {
+            name: "Phase 2: The Maker & Hardware",
+            color: "bg-pink-500",
+            courses: [
+              { id: 4, name: "ออกแบบโดรนในฝัน (3D)", timeline: ["0-15น. CAD Basics", "15-45น. ออกแบบชิ้นส่วน", "45-60น. ส่งออก STL"], main: "ออกแบบชิ้นส่วนโดรนที่เบาและแข็งแรงโดยใช้หลักวิศวกรรม", activity: "ออกแบบ Canopy หรือ Landing Gear ในแบบของคุณ", tip: "น้ำหนักที่ลดลงทุกกรัมช่วยให้บินได้นานขึ้น" },
+              { id: 5, name: "พิมพ์สามมิติและวัสดุ", timeline: ["0-20น. ประเภทพลาสติก", "20-45น. ตั้งค่า Slicer", "45-60น. แกะงาน"], main: "เรียนรู้การใช้ PETG สำหรับโครงโดรนที่ทนทานกว่า PLA", activity: "ตั้งค่าเครื่องพิมพ์และเริ่มพิมพ์ชิ้นส่วนจริง", tip: "15-20% Infill คือจุดสมดุลที่ดีที่สุด" },
+              { id: 6, name: "บัดกรีและวิศวกรรม", timeline: ["0-15น. Iron Safety", "15-45น. ประกอบวงจร", "45-60น. ตรวจสอบ"], main: "เชื่อมต่อมอเตอร์และบอร์ด ESP32 ด้วยตะกั่วบัดกรี", activity: "บัดกรีขั้วมอเตอร์และประกอบเฟรม", tip: "อย่าแช่หัวแร้งนานเกินไป เดี๋ยวชิปพัง!" }
+            ]
+          },
+          {
+            name: "Phase 3: Coding & Autonomous",
+            color: "bg-purple-500",
+            courses: [
+              { id: 7, name: "บล็อกคำสั่งมหัศจรรย์", timeline: ["0-15น. ตรรกะโปรแกรม", "15-45น. ฝึกบินอัตโนมัติ", "45-60น. Debug"], main: "สร้างอัลกอริทึมการบินด้วยการเรียงลำดับบล็อก Sequence และ Loop", activity: "เขียนคำสั่งให้โดรนบินเป็นรูปตัว S", tip: "โดรนทำตามคำสั่งเป๊ะๆ ถ้าโปรแกรมผิด โดรนก็ไปผิดทาง" },
+              { id: 8, name: "เปลี่ยนโลกด้วย Python", timeline: ["0-20น. ไวยากรณ์ Python", "20-50น. สั่งการ ESP32", "50-60น. เปรียบเทียบ"], main: "ย้ายจากการลากบล็อกสู่การเขียนโค้ดภาษา Python มืออาชีพ", activity: "เขียนสคริปต์ควบคุมโดรนผ่านคีย์บอร์ด", tip: "การเว้นวรรค (Indentation) ใน Python สำคัญมาก" },
+              { id: 9, name: "เซนเซอร์และระบบอัจฉริยะ", timeline: ["0-15น. LiDAR ToF", "15-45น. บินหลบสิ่งกีดขวาง", "45-60น. กึ่งอัตโนมัติ"], main: "ใช้เลเซอร์วัดระยะทางเพื่อให้โดรนบินหลบสิ่งกีดขวางได้เอง", activity: "โปรแกรม Follow Hand (บินตามมือ)", tip: "LiDAR ทำงานได้ดีที่สุดในที่สว่าง" }
+            ]
+          },
+          {
+            name: "Phase 4: Advanced Skills",
+            color: "bg-emerald-500",
+            courses: [
+              { id: 10, name: "กฎหมายและจริยธรรม", timeline: ["0-25น. กฎหมาย CAAT", "25-45น. จริยธรรมการบิน", "45-60น. Quiz"], main: "การจดทะเบียนโดรน กฎระเบียบ 90 เมตร และความเป็นส่วนตัว", activity: "จำลองการขออนุญาตบินจริง", tip: "ความปลอดภัยของผู้อื่นสำคัญที่สุด" },
+              { id: 11, name: "โดรนกู้โลก (Rescue)", timeline: ["0-20น. Case Studies", "20-50น. จำลองภารกิจ", "50-60น. ไอเดีย"], main: "ประยุกต์ใช้โดรนในการส่งยาหรือสำรวจพื้นที่ภัยพิบัติ", activity: "ออกแบบภารกิจบินกู้ภัยจำลอง", tip: "นวัตกรรมที่ดีต้องช่วยแก้ปัญหาชีวิตคน" },
+              { id: 12, name: "นวัตกรตัวจิ๋ว (Graduation)", timeline: ["0-30น. Final Tuning", "30-50น. Pitching", "50-60น. รับเกียรติบัตร"], main: "สรุปการเรียนรู้ นำเสนอผลงาน และรับใบประกาศนียบัตร", activity: "Demo การบินนวัตกรรมที่คุณสร้างเอง", tip: "ความล้มเหลวคือส่วนหนึ่งของการเรียนรู้" }
+            ]
+          }
+        ]
+      },
+      shop: {
+        title: "ร้านค้า Codelift Academy",
+        sub: "คัดสรรสื่อการสอนและอุปกรณ์เพื่อสร้างนวัตกรตัวจิ๋ว",
+        buyBtn: "ใส่ตะกร้า",
+        currency: "บาท",
+        socialProof: "นิยมมากในกลุ่มห้องเรียนพิเศษ STEM",
+        categories: [
+          {
+            name: "1. ชุดโดรนเพื่อการศึกษา (Educational Kits)",
+            items: [
+              { id: "s1", name: "Codelift Starter Kit", price: "TBA", desc: "ชุดโดรนประกอบเองพื้นฐาน พร้อมบอร์ด ESP32-S3", icon: <Package />, icons: [<Wrench size={14}/>, <Cpu size={14}/>], labels: ["Assembly", "Beginner"] },
+              { id: "s2", name: "Codelift Advanced Bundle", price: 4900, desc: "ชุดโดรนพร้อมเซนเซอร์ LiDAR และ Optical Flow", icon: <Rocket />, icons: [<Bot size={14}/>, <Satellite size={14}/>], labels: ["AI & Auto", "Pro"], featured: true },
+              { id: "s3", name: "Power & Spare Parts Pack", price: 850, desc: "แบตเตอรี่และใบพัดสำรองเกรดพรีเมียม", icon: <Zap />, icons: [<Zap size={14}/>, <RefreshCw size={14}/>], labels: ["Power", "Spare"] }
+            ]
+          },
+          {
+            name: "2. คอร์สและเวิร์กช็อป (Workshops)",
+            items: [
+              { id: "c1", name: "Academy Full Access", price: 1500, desc: "สิทธิ์เรียนออนไลน์ทั้ง 12 โมดูลตลอดชีพ", icon: <BookOpen />, icons: [<FileText size={14}/>, <Medal size={14}/>], labels: ["Full Access", "Python"] },
+              { id: "c2", name: "Weekend Camp (Chiang Rai)", price: 3500, desc: "เวิร์กช็อป 2 วัน 1 คืน รวมที่พักและอาหาร", icon: <MapPin />, icons: [<Users size={14}/>, <UserCheck size={14}/>], labels: ["In-Person", "Group Project"] }
+            ]
+          }
+        ]
+      },
+      blockly: {
+        title: "Coding Lab",
+        sub: "ท้าทายด้วย 12 ฟังก์ชันการบินอัจฉริยะ",
+        run: "เริ่มบิน!",
+        clear: "ล้างโค้ด",
+        blocks: [
+          { id: 'takeoff', label: "บินขึ้น (Takeoff)", color: "bg-blue-400", border: "border-blue-600", icon: <ArrowUp size={16}/> },
+          { id: 'land', label: "ลงจอด (Land)", color: "bg-orange-400", border: "border-orange-600", icon: <ArrowDown size={16}/> },
+          { id: 'forward', label: "ไปข้างหน้า", color: "bg-blue-400", border: "border-blue-600", icon: <ArrowUp size={16}/> },
+          { id: 'backward', label: "ถอยหลัง", color: "bg-blue-400", border: "border-blue-600", icon: <ArrowDown size={16}/> },
+          { id: 'left', label: "ไปทางซ้าย", color: "bg-blue-400", border: "border-blue-600", icon: <ArrowLeft size={16}/> },
+          { id: 'right', label: "ไปทางขวา", color: "bg-blue-400", border: "border-blue-600", icon: <ArrowRight size={16}/> },
+          { id: 'turn_cw', label: "หมุนขวา 90°", color: "bg-indigo-400", border: "border-indigo-600", icon: <RotateCw size={16}/> },
+          { id: 'turn_ccw', label: "หมุนซ้าย 90°", color: "bg-indigo-400", border: "border-indigo-600", icon: <RotateCcw size={16}/> },
+          { id: 'flip', label: "ตีลังกา (Flip 360)", color: "bg-pink-500", border: "border-pink-600", icon: <RefreshCw size={16}/> },
+          { id: 'wait', label: "รอ 1 วินาที", color: "bg-slate-400", border: "border-slate-600", icon: <Timer size={16}/> },
+          { id: 'if_tof', label: "ถ้า ToF < 20cm ให้หยุด", color: "bg-emerald-500", border: "border-emerald-600", icon: <Split size={16}/> },
+          { id: 'stop', label: "หยุดฉุกเฉิน", color: "bg-red-500", border: "border-red-700", icon: <AlertTriangle size={16}/> }
+        ]
+      }
+    },
+    en: {
+      nav: { home: "Home", code: "Lab", shop: "Shop", curriculum: "Courses", connect: "Connect" },
+      hero: {
+        badge: "WELCOME TO CODELIFT ACADEMY 🎓",
+        title1: "Build Your Own",
+        title2: "Personal Drone",
+        sub: "Learning by doing. From hardware assembly to high-level sensor coding.",
+        btnStart: "Start Learning",
+        btnLab: "Open Drone Lab"
+      },
+      curriculum: {
+        title: "Drone Maker Curriculum",
+        sub: "12 modules covering all future engineering skills",
+        duration: "60 mins per session",
+        backBtn: "Back to List",
+        headers: { content: "Core Content", activity: "Activity", tip: "Expert Tip" },
+        phases: [
+          {
+            name: "Phase 1: Flight Fundamentals",
+            color: "bg-blue-500",
+            courses: [
+              { id: 1, name: "Intro to Flight", timeline: ["0-15m Intro", "15-35m Physics", "35-50m Sim", "50-60m Summary"], main: "Understand 4 forces: Lift, Weight, Thrust, Drag.", activity: "Practice flight control using the Simulator.", tip: "Balance is key for stable flight." },
+              { id: 2, name: "Anatomy of Drone", timeline: ["0-15m Hardware", "15-40m Control", "40-55m Wiring", "55-60m Quiz"], main: "Components: ESP32-S3 brain, motors, and LiDAR sensors.", activity: "Explore the board and practice wiring signal cables.", tip: "Correct prop direction is critical!" }
+            ]
+          },
+          {
+            name: "Phase 2: The Maker Skills",
+            color: "bg-pink-500",
+            courses: [
+              { id: 4, name: "3D Drone Design", timeline: ["0-15m CAD", "15-45m Part Design", "45-60m STL"], main: "Design custom landing gear and frame components.", activity: "Design your custom canopy in CAD.", tip: "Lighter drones fly longer!" }
+            ]
+          }
+        ]
+      },
+      shop: {
+        title: "Codelift Academy Shop",
+        sub: "Curated parts and kits for future innovators.",
+        buyBtn: "Add to Cart",
+        currency: "THB",
+        socialProof: "Popular in STEM classes",
+        categories: [
+          {
+            name: "1. Educational Kits",
+            items: [
+              { id: "s1", name: "Codelift Starter Kit", price: "TBA", desc: "Basic drone assembly kit with ESP32-S3.", icon: <Package />, icons: [<Wrench size={14}/>, <Cpu size={14}/>], labels: ["Assembly", "Intro"] },
+              { id: "s2", name: "Advanced Bundle", price: 4900, desc: "Full kit with LiDAR & Optical Flow sensors.", icon: <Rocket />, icons: [<Bot size={14}/>, <Satellite size={14}/>], labels: ["AI & Auto", "Pro"], featured: true }
+            ]
+          }
+        ]
+      },
+      blockly: {
+        title: "Coding Lab",
+        sub: "Master 12 smart flight functions.",
+        run: "Run Code",
+        clear: "Clear All",
+        blocks: [
+          { id: 'takeoff', label: "Takeoff", color: "bg-blue-400", border: "border-blue-600", icon: <ArrowUp size={16}/> },
+          { id: 'land', label: "Land", color: "bg-orange-400", border: "border-orange-600", icon: <ArrowDown size={16}/> },
+          { id: 'forward', label: "Forward", color: "bg-blue-400", border: "border-blue-600", icon: <ArrowUp size={16}/> },
+          { id: 'backward', label: "Backward", color: "bg-blue-400", border: "border-blue-600", icon: <ArrowDown size={16}/> },
+          { id: 'left', label: "Move Left", color: "bg-blue-400", border: "border-blue-600", icon: <ArrowLeft size={16}/> },
+          { id: 'right', label: "Move Right", color: "bg-blue-400", border: "border-blue-600", icon: <ArrowRight size={16}/> },
+          { id: 'turn_cw', label: "Turn CW 90°", color: "bg-indigo-400", border: "border-indigo-600", icon: <RotateCw size={16}/> },
+          { id: 'turn_ccw', label: "Turn CCW 90°", color: "bg-indigo-400", border: "border-indigo-600", icon: <RotateCcw size={16}/> },
+          { id: 'flip', label: "Flip 360", color: "bg-pink-500", border: "border-pink-600", icon: <RefreshCw size={16}/> },
+          { id: 'wait', label: "Wait 1s", color: "bg-slate-400", border: "border-slate-600", icon: <Timer size={16}/> },
+          { id: 'if_tof', label: "If ToF < 20cm Stop", color: "bg-emerald-500", border: "border-emerald-600", icon: <Split size={16}/> },
+          { id: 'stop', label: "Emergency Stop", color: "bg-red-500", border: "border-red-700", icon: <AlertTriangle size={16}/> }
+        ]
+      }
+    }
+  };
+
+  const t = content[lang];
+
+  const handleConnect = (type) => {
+    setIsScanning(true);
+    setTimeout(() => {
+      setConnection({ type, status: 'connected', deviceName: type === 'ble' ? 'Codelift_v2_BLE' : 'COM3_Serial' });
+      setIsScanning(false);
+    }, 1500);
+  };
+
+  const addToCart = (product) => {
+    setCart([...cart, product]);
+  };
+
+  const runProgram = async () => {
+    if (workspace.length === 0 || isExecuting) return;
+    setIsExecuting(true);
+    for (let i = 0; i < workspace.length; i++) {
+      setCurrentBlockIndex(i);
+      const block = workspace[i];
+      await new Promise(resolve => setTimeout(resolve, 800));
+      setDronePos(prev => {
+        let next = { ...prev };
+        switch(block.id) {
+          case 'takeoff': next = { ...prev, z: 60, isFlying: true }; break;
+          case 'forward': next = { ...prev, y: prev.y - 40 }; break;
+          case 'backward': next = { ...prev, y: prev.y + 40 }; break;
+          case 'left': next = { ...prev, x: prev.x - 40 }; break;
+          case 'right': next = { ...prev, x: prev.x + 40 }; break;
+          case 'turn_cw': next = { ...prev, rotate: prev.rotate + 90 }; break;
+          case 'turn_ccw': next = { ...prev, rotate: prev.rotate - 90 }; break;
+          case 'flip': 
+            next = { ...prev, isFlipping: true };
+            setTimeout(() => setDronePos(d => ({ ...d, isFlipping: false })), 600);
+            break;
+          case 'land': next = { ...prev, z: 0, isFlying: false }; break;
+          case 'stop': next = { ...prev, z: 0, isFlying: false }; break;
+          default: break;
+        }
+        setSensorData({ 
+          tof: next.z + (Math.random() * 2), 
+          opticalFlow: { vx: (block.id === 'forward' || block.id === 'backward') ? 1.5 : 0, vy: 0 } 
+        });
+        return next;
+      });
+      if (block.id === 'stop') break;
+    }
+    setIsExecuting(false);
+    setCurrentBlockIndex(-1);
+  };
+
+  const DroneSVG = ({ isFlying, rotate, z, size = 120, isFlipping }) => (
+    <div 
+      className={`relative transition-all duration-700 ease-in-out ${isFlipping ? 'animate-flip' : ''}`}
+      style={{ transform: `rotate(${rotate}deg) scale(${1 + (z / 200)})` }}
+    >
+      <svg width={size} height={size} viewBox="0 0 120 120">
+        <path d="M40 40L80 80M80 40L40 80" stroke="#cbd5e1" strokeWidth="8" strokeLinecap="round"/>
+        <rect x="45" y="45" width="30" height="30" rx="8" fill="#334155" />
+        <rect x="52" y="52" width="16" height="10" rx="2" fill="#60a5fa" />
+        {[ {x: 40, y: 40}, {x: 80, y: 40}, {x: 40, y: 80}, {x: 80, y: 80} ].map((m, i) => (
+          <g key={i}>
+            <circle cx={m.x} cy={m.y} r="8" fill="#1e293b" />
+            <ellipse cx={m.x} cy={m.y} rx="15" ry="3" fill="#94a3b8">
+               {isFlying && <animateTransform attributeName="transform" type="rotate" from={`0 ${m.x} ${m.y}`} to={`360 ${m.x} ${m.y}`} dur="0.4s" repeatCount="indefinite" />}
+            </ellipse>
+          </g>
+        ))}
+      </svg>
+      <style>{`
+        @keyframes flip-360 { 0% { transform: rotateX(0deg); } 100% { transform: rotateX(360deg); } }
+        .animate-flip { animation: flip-360 0.6s ease-in-out; }
+      `}</style>
+    </div>
+  );
+
+  return (
+    <div className={`min-h-screen bg-white text-slate-700 ${lang === 'th' ? "font-['Mali',sans-serif]" : "font-['Itim',sans-serif]"}`}>
+      <style>{` .school-title { font-family: 'Schoolbell', 'Mali', cursive; } `}</style>
+
+      {/* Navigation */}
+      <nav className="fixed top-0 w-full bg-white/95 backdrop-blur-md z-50 border-b border-blue-50 h-16 md:h-20 flex items-center px-4 md:px-12 shadow-sm">
+        <div className="max-w-7xl mx-auto w-full flex justify-between items-center">
+          <div className="flex items-center gap-3 cursor-pointer group" onClick={() => {setView('home'); setSelectedCourse(null);}}>
+             <div className="w-10 h-10 md:w-12 md:h-12 bg-blue-100 rounded-xl md:rounded-2xl flex items-center justify-center text-blue-500 shadow-lg group-hover:scale-110 transition-transform">
+               <Navigation size={24} />
+             </div>
+             <div>
+               <h1 className="school-title text-xl md:text-2xl text-blue-400 leading-none">Codelift</h1>
+               <p className="text-[8px] md:text-[10px] uppercase font-bold tracking-widest text-slate-400">Academy</p>
+             </div>
+          </div>
+
+          {/* Desktop Nav */}
+          <div className="hidden lg:flex items-center gap-8 text-sm md:text-base">
+            <button onClick={() => {setView('home'); setSelectedCourse(null);}} className={`hover:text-blue-500 transition-all ${view === 'home' ? 'text-blue-500 font-bold' : ''}`}>{t.nav.home}</button>
+            <button onClick={() => {setView('curriculum'); setSelectedCourse(null);}} className={`hover:text-blue-500 transition-all ${view === 'curriculum' ? 'text-blue-500 font-bold' : ''}`}>{t.nav.curriculum}</button>
+            <button onClick={() => {setView('code'); setSelectedCourse(null);}} className={`hover:text-blue-500 transition-all ${view === 'code' ? 'text-blue-500 font-bold' : ''}`}>{t.nav.code}</button>
+            <button onClick={() => {setView('shop'); setSelectedCourse(null);}} className={`hover:text-blue-500 transition-all ${view === 'shop' ? 'text-blue-500 font-bold' : ''}`}>{t.nav.shop}</button>
+            
+            <div className="flex bg-slate-100 p-1 rounded-xl">
+              <button onClick={() => setLang('th')} className={`px-2 md:px-3 py-1 rounded-lg text-xs md:text-sm transition-all ${lang === 'th' ? 'bg-white shadow-sm text-blue-500 font-bold' : 'text-slate-400'}`}>TH</button>
+              <button onClick={() => setLang('en')} className={`px-2 md:px-3 py-1 rounded-lg text-xs md:text-sm transition-all ${lang === 'en' ? 'bg-white shadow-sm text-blue-500 font-bold' : 'text-slate-400'}`}>EN</button>
+            </div>
+
+            <div className="relative cursor-pointer" onClick={() => setView('shop')}>
+               <ShoppingCart size={24} className="text-slate-400" />
+               {cart.length > 0 && <span className="absolute -top-1 -right-1 bg-pink-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">{cart.length}</span>}
+            </div>
+          </div>
+
+          {/* Mobile Menu Trigger */}
+          <div className="flex lg:hidden items-center gap-4">
+            <div className="relative cursor-pointer" onClick={() => setView('shop')}>
+               <ShoppingCart size={24} className="text-slate-400" />
+               {cart.length > 0 && <span className="absolute -top-1 -right-1 bg-pink-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">{cart.length}</span>}
+            </div>
+            <button className="p-2 bg-slate-50 rounded-xl" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+              {isMenuOpen ? <X size={24}/> : <Menu size={24}/>}
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      {/* Mobile Drawer */}
+      {isMenuOpen && (
+        <div className="fixed inset-0 bg-white z-[60] pt-20 px-6 space-y-4 lg:hidden animate-in slide-in-from-right duration-300">
+           <button onClick={() => {setView('home'); setIsMenuOpen(false);}} className="block w-full text-left text-2xl school-title border-b border-slate-50 py-3">{t.nav.home}</button>
+           <button onClick={() => {setView('curriculum'); setIsMenuOpen(false);}} className="block w-full text-left text-2xl school-title border-b border-slate-50 py-3">{t.nav.curriculum}</button>
+           <button onClick={() => {setView('code'); setIsMenuOpen(false);}} className="block w-full text-left text-2xl school-title border-b border-slate-50 py-3">{t.nav.code}</button>
+           <button onClick={() => {setView('shop'); setIsMenuOpen(false);}} className="block w-full text-left text-2xl school-title border-b border-slate-50 py-3">{t.nav.shop}</button>
+           <div className="flex gap-4 pt-4">
+              <button onClick={() => setLang('th')} className={`p-4 rounded-xl flex-1 border-2 ${lang === 'th' ? 'border-blue-400 text-blue-500 font-bold bg-blue-50' : 'border-slate-100'}`}>ไทย</button>
+              <button onClick={() => setLang('en')} className={`p-4 rounded-xl flex-1 border-2 ${lang === 'en' ? 'border-blue-400 text-blue-500 font-bold bg-blue-50' : 'border-slate-100'}`}>English</button>
+           </div>
+        </div>
+      )}
+
+      {}
+      <div className="pt-16 md:pt-20 min-h-[calc(100vh-80px)]">
+        {view === 'home' && (
+          <main className="animate-in fade-in duration-700">
+            <section className="pt-20 md:pt-32 pb-16 md:pb-24 px-6 text-center max-w-5xl mx-auto">
+               <div className="inline-block px-4 py-1.5 bg-blue-50 text-blue-500 rounded-full text-[10px] md:text-xs font-bold mb-6 tracking-widest uppercase">
+                  {t.hero.badge}
+               </div>
+               <h2 className="school-title text-4xl md:text-8xl mb-6 md:mb-8 text-slate-800 leading-tight">
+                 {t.hero.title1} <br/> <span className="text-blue-400">{t.hero.title2}</span>
+               </h2>
+               <p className="text-base md:text-2xl text-slate-500 mb-8 md:mb-12 leading-relaxed max-w-3xl mx-auto px-4">
+                 {t.hero.sub}
+               </p>
+               <div className="flex flex-col sm:flex-row gap-4 justify-center px-4">
+                  <button onClick={() => setView('curriculum')} className="bg-blue-400 text-white px-8 md:px-12 py-4 rounded-2xl text-lg md:text-xl font-bold shadow-xl shadow-blue-100 hover:scale-105 transition-all">
+                     {t.hero.btnStart}
+                  </button>
+                  <button onClick={() => setView('code')} className="bg-white border-2 border-slate-100 text-slate-500 px-8 md:px-12 py-4 rounded-2xl text-lg md:text-xl font-bold flex items-center justify-center gap-3 hover:border-blue-400 transition-all">
+                     <Code size={20} /> {t.nav.code}
+                  </button>
+               </div>
+               <div className="mt-16 md:mt-24 flex justify-center animate-bounce duration-[4000ms]">
+                  <DroneSVG isFlying={true} rotate={8} z={80} size={150} />
+               </div>
+            </section>
+          </main>
+        )}
+
+        {/* Lab View - Mobile Focused Layout */}
+        {view === 'code' && (
+          <main className="animate-in slide-in-from-bottom-6 duration-700 p-4 md:p-8 max-w-[1700px] mx-auto">
+            {/* Lab Header */}
+            <div className="flex flex-col xl:flex-row justify-between items-start md:items-end mb-6 md:mb-8 gap-4 md:gap-6">
+               <div className="max-w-2xl">
+                  <h2 className="school-title text-3xl md:text-4xl text-slate-800">{t.blockly.title}</h2>
+                  <p className="text-sm md:text-base text-slate-500 mt-1 font-light">{t.blockly.sub}</p>
+               </div>
+               <div className="flex flex-wrap gap-2 md:gap-4 items-center w-full md:w-auto">
+                  <button onClick={() => handleConnect('ble')} className={`flex-1 md:flex-none flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold border-2 transition-all ${connection.status === 'connected' ? 'bg-green-50 text-green-600 border-green-200' : 'bg-white text-slate-400 border-slate-200'}`}>
+                     <Bluetooth size={16} className={connection.status === 'connected' ? "animate-pulse" : ""} />
+                     <span className="truncate max-w-[100px] md:max-w-none">{connection.status === 'connected' ? connection.deviceName : t.nav.connect}</span>
+                  </button>
+                  <button onClick={() => setWorkspace([])} className="bg-white border-2 p-2.5 rounded-xl text-slate-400 hover:text-red-400"><Trash2 size={20}/></button>
+                  <button onClick={runProgram} disabled={isExecuting || workspace.length === 0} className={`flex-1 md:flex-none px-6 py-2.5 rounded-xl text-white font-bold text-base md:text-xl shadow-lg transition-all active:scale-95 ${isExecuting || workspace.length === 0 ? 'bg-slate-300' : 'bg-blue-500 hover:bg-blue-600 shadow-blue-200'}`}>
+                     {isExecuting ? '...' : t.blockly.run}
+                  </button>
+               </div>
+            </div>
+
+            {/* Responsive Lab Grid */}
+            <div className="grid grid-cols-1 xl:grid-cols-12 gap-4 md:gap-6 h-auto xl:h-[750px]">
+               {/* 1. Simulator - Fixed at top on mobile */}
+               <div className="xl:col-span-4 order-1 xl:order-3 space-y-4">
+                  <div className="bg-slate-900 rounded-3xl aspect-video md:aspect-square shadow-2xl relative overflow-hidden flex items-center justify-center border-4 border-slate-800">
+                     <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:30px:30px] md:bg-[size:50px:50px]"></div>
+                     <div className="z-10 transition-all duration-700" style={{ transform: `translate(${dronePos.x}px, ${dronePos.y}px)` }}>
+                        <DroneSVG isFlying={dronePos.isFlying} rotate={dronePos.rotate} z={dronePos.z} size={100} isFlipping={dronePos.isFlipping} />
+                     </div>
+                     <div className="absolute bottom-3 left-3 text-[8px] md:text-[10px] font-mono text-white/40 bg-black/40 px-2 py-1 rounded-lg backdrop-blur-md">
+                        X: {dronePos.x} | Y: {dronePos.y} | Z: {dronePos.z}
+                     </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 md:gap-4">
+                     <div className="p-3 bg-slate-50 rounded-2xl border border-slate-100 flex flex-col justify-center">
+                        <div className="text-[8px] md:text-[10px] text-slate-400 font-bold mb-0.5 md:mb-1 uppercase">ToF Distance</div>
+                        <div className="text-sm md:text-xl font-mono text-blue-500 font-bold">{sensorData.tof.toFixed(1)} cm</div>
+                     </div>
+                     <div className="p-3 bg-slate-50 rounded-2xl border border-slate-100 flex flex-col justify-center">
+                        <div className="text-[8px] md:text-[10px] text-slate-400 font-bold mb-0.5 md:mb-1 uppercase">Optical Flow</div>
+                        <div className="text-sm md:text-xl font-mono text-emerald-500 font-bold">{sensorData.opticalFlow.vx.toFixed(1)} m/s</div>
+                     </div>
+                  </div>
+               </div>
+
+               {/* 2. Workspace - Mid */}
+               <div className="xl:col-span-5 order-2 xl:order-2 bg-white rounded-3xl p-4 md:p-8 border-2 border-slate-50 shadow-inner min-h-[300px] xl:min-h-0 overflow-y-auto relative bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:20px_20px] md:[background-size:24px_24px]">
+                  <div className="bg-slate-800 text-white p-3 md:p-4 rounded-xl md:rounded-2xl w-fit flex items-center gap-3 md:gap-4 mb-4 md:mb-6 shadow-xl text-sm md:text-lg">
+                     <div className="bg-purple-500 p-1.5 md:p-2 rounded-lg md:rounded-xl"><Play size={14} fill="white" /></div>
+                     {lang === 'th' ? 'จุดเริ่มทำงาน' : 'On Start'}
+                  </div>
+                  <div className="ml-6 md:ml-10 space-y-2 pb-10">
+                     {workspace.map((block, i) => (
+                       <div key={block.i} className={`${block.color} text-white p-3 md:p-4 rounded-xl md:rounded-2xl w-full max-w-[280px] md:max-w-[320px] flex items-center gap-3 md:gap-4 shadow-md border-b-4 border-black/10 text-xs md:text-base transition-all ${currentBlockIndex === i ? 'ring-4 ring-yellow-400 scale-105 translate-x-2 md:translate-x-4' : ''}`}>
+                          {React.cloneElement(block.icon, { size: 16 })} {block.label}
+                       </div>
+                     ))}
+                  </div>
+                  {workspace.length === 0 && <div className="absolute inset-0 flex items-center justify-center text-slate-300 text-xs md:text-sm italic px-10 text-center">Add blocks below to start coding!</div>}
+               </div>
+
+               {/* 3. Toolbox - Bottom on mobile (Scrollable horizontally) */}
+               <div className="xl:col-span-3 order-3 xl:order-1 bg-white rounded-3xl p-4 md:p-6 border border-slate-100 shadow-sm overflow-hidden flex flex-col">
+                  <h3 className="text-[10px] uppercase font-bold text-slate-300 tracking-widest mb-4">Toolbox</h3>
+                  <div className="flex xl:flex-col overflow-x-auto xl:overflow-y-auto gap-2 md:gap-3 pb-2 xl:pb-0 scrollbar-hide">
+                     {t.blockly.blocks.map(b => (
+                       <button key={b.id} onClick={() => setWorkspace([...workspace, {...b, i: Date.now()}])} className={`flex-shrink-0 xl:flex-shrink-1 w-auto xl:w-full p-2.5 md:p-3 rounded-xl ${b.color} text-white text-[10px] md:text-sm font-bold flex items-center gap-2 md:gap-3 shadow-md border-b-4 ${b.border} active:translate-y-1 transition-all`}>
+                          <div className="bg-white/20 p-1 md:p-1.5 rounded-lg">{React.cloneElement(b.icon, { size: 12 })}</div>
+                          <span className="whitespace-nowrap">{b.label}</span>
+                       </button>
+                    ))}
+                  </div>
+               </div>
+            </div>
+          </main>
+        )}
+
+        {/* Shop View - Responsive Cards */}
+        {view === 'shop' && (
+          <main className="animate-in fade-in duration-700 py-10 md:py-12 px-4 md:px-24 max-w-7xl mx-auto">
+            <div className="text-center mb-10 md:mb-16">
+               <h2 className="school-title text-3xl md:text-5xl mb-2 md:mb-4 text-slate-800">{t.shop.title}</h2>
+               <p className="text-sm md:text-lg text-slate-400 font-light">{t.shop.sub}</p>
+            </div>
+
+            <div className="space-y-16 md:space-y-24">
+               {t.shop.categories.map((category, catIdx) => (
+                 <section key={catIdx}>
+                    <h3 className="school-title text-2xl md:text-3xl text-slate-700 mb-6 md:mb-10 pb-2 md:pb-4 border-b border-slate-100 flex items-center gap-3">
+                       <Package className="text-blue-400" size={24} /> {category.name}
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-10">
+                       {category.items.map((item) => (
+                         <div key={item.id} className={`bg-white rounded-[2rem] md:rounded-[3rem] p-6 md:p-10 border-2 transition-all group flex flex-col items-center relative shadow-sm hover:shadow-xl ${item.featured ? 'border-blue-200' : 'border-slate-100'}`}>
+                            {item.featured && <div className="absolute -top-3 md:-top-4 bg-orange-500 text-white px-3 md:px-4 py-1 rounded-full text-[8px] md:text-[10px] font-bold shadow-lg flex items-center gap-2 animate-bounce"><Star size={10} fill="white" /> Recommended</div>}
+                            <div className="w-16 h-16 md:w-20 md:h-20 bg-slate-50 rounded-2xl flex items-center justify-center mb-6 md:mb-8 text-3xl md:text-4xl text-blue-400 border border-slate-50">{item.icon}</div>
+                            <h4 className="text-base md:text-lg font-bold text-slate-800 mb-3 md:mb-4 text-center">{item.name}</h4>
+                            <div className="flex flex-wrap justify-center gap-1.5 md:gap-2 mb-4 md:mb-6">
+                               {item.labels.map((label, lIdx) => (
+                                 <div key={lIdx} className="flex items-center gap-1 bg-slate-50 text-slate-400 px-2 py-0.5 rounded-lg text-[8px] md:text-[10px] font-bold uppercase tracking-wider border border-slate-100">{item.icons[lIdx]} {label}</div>
+                               ))}
+                            </div>
+                            <p className="text-[10px] md:text-xs text-slate-500 text-center mb-6 md:mb-8 font-light leading-relaxed flex-grow">{item.desc}</p>
+                            <div className="mt-auto w-full flex flex-col items-center gap-4 md:gap-6">
+                               <div className="text-2xl md:text-3xl font-bold text-slate-800">{item.price === "TBA" ? "To be announced" : `${item.price.toLocaleString()} ${t.shop.currency}`}</div>
+                               <button onClick={() => addToCart(item)} className={`w-full py-3 md:py-4 rounded-xl md:rounded-2xl text-sm md:text-base font-bold transition-all flex items-center justify-center gap-3 active:scale-95 ${item.featured ? 'bg-orange-500 text-white hover:bg-orange-600 shadow-orange-200 shadow-lg' : 'bg-blue-50 text-blue-500 hover:bg-blue-500 hover:text-white'}`}>
+                                  <ShoppingCart size={18} /> {t.shop.buyBtn}
+                               </button>
+                               <div className="flex items-center gap-2 text-[8px] md:text-[10px] text-emerald-500 font-bold"><ShieldCheck size={12} /> {t.shop.socialProof}</div>
+                            </div>
+                         </div>
+                       ))}
+                    </div>
+                 </section>
+               ))}
+            </div>
+          </main>
+        )}
+
+        {/* Curriculum View - Grid */}
+        {view === 'curriculum' && (
+          <main className="animate-in fade-in duration-700 py-10 md:py-12 px-4 md:px-24 max-w-7xl mx-auto">
+             {!selectedCourse ? (
+               <>
+                 <div className="text-center mb-10 md:mb-16">
+                    <h2 className="school-title text-3xl md:text-5xl mb-2 md:mb-4 text-slate-800">{t.curriculum.title}</h2>
+                    <p className="text-sm md:text-lg text-slate-400 flex items-center justify-center gap-2"><Clock size={16} /> {t.curriculum.duration}</p>
+                 </div>
+                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+                    {t.curriculum.phases.map((phase, pIdx) => (
+                      <div key={pIdx} className="bg-white rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden flex flex-col">
+                         <div className={`${phase.color} p-4 md:p-5 text-white`}><h3 className="school-title text-lg md:text-xl font-bold">{phase.name}</h3></div>
+                         <div className="p-4 md:p-6 space-y-3 md:space-y-4 flex-grow">
+                            {phase.courses.map((course) => (
+                              <div key={course.id} onClick={() => setSelectedCourse(course)} className="group cursor-pointer border-b border-slate-50 pb-3 md:pb-4 last:border-0 last:pb-0 hover:bg-slate-50/50 p-2 md:p-3 rounded-xl transition-all">
+                                 <div className="flex items-start gap-3">
+                                    <div className={`w-7 h-7 rounded-lg ${phase.color} bg-opacity-10 flex items-center justify-center text-xs font-bold`} style={{ color: phase.color.replace('bg-', 'text-') }}>{course.id}</div>
+                                    <div className="flex-grow">
+                                       <h4 className="text-sm md:text-base font-bold text-slate-700 group-hover:text-blue-500 transition-colors flex items-center justify-between">
+                                         {course.name}
+                                         <ChevronRight size={14} className="opacity-0 group-hover:opacity-100 transition-all" />
+                                       </h4>
+                                       <div className="flex flex-wrap gap-1.5 mt-1.5 md:mt-2">
+                                          {course.timeline.slice(0,2).map((item, i) => (
+                                            <span key={i} className="text-[8px] md:text-[10px] text-slate-400 bg-white px-1.5 py-0.5 rounded border border-slate-100">{item}</span>
+                                          ))}
+                                          <span className="text-[8px] md:text-[10px] text-blue-400">...read more</span>
+                                       </div>
+                                    </div>
+                                 </div>
+                              </div>
+                            ))}
+                         </div>
+                      </div>
+                    ))}
+                 </div>
+               </>
+             ) : (
+               <div className="animate-in slide-in-from-right duration-500 bg-white rounded-[2rem] md:rounded-[3rem] border border-slate-100 shadow-xl overflow-hidden max-w-4xl mx-auto">
+                  <div className="bg-slate-50 p-4 md:p-6 flex items-center justify-between border-b border-slate-100">
+                     <button onClick={() => setSelectedCourse(null)} className="flex items-center gap-1.5 text-xs md:text-sm text-slate-400 hover:text-blue-500 transition-colors font-bold"><ChevronLeft size={16}/> {t.curriculum.backBtn}</button>
+                     <div className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-[10px] font-bold flex items-center gap-1.5"><Award size={12} /> Course {selectedCourse.id}</div>
+                  </div>
+                  <div className="p-6 md:p-12">
+                     <h2 className="school-title text-2xl md:text-5xl text-slate-800 mb-6 md:mb-8">{selectedCourse.name}</h2>
+                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-8 md:mb-12">
+                        <div className="md:col-span-2 space-y-6 md:space-y-10">
+                           <section>
+                              <h4 className="flex items-center gap-2 md:gap-3 text-blue-500 font-bold text-lg md:text-xl mb-3 md:mb-4"><BookOpen size={20} /> {t.curriculum.headers.content}</h4>
+                              <p className="text-xs md:text-base text-slate-600 leading-relaxed font-light bg-blue-50/30 p-4 md:p-6 rounded-2xl border border-blue-50 whitespace-pre-wrap">{selectedCourse.main}</p>
+                           </section>
+                           <section>
+                              <h4 className="flex items-center gap-2 md:gap-3 text-pink-500 font-bold text-lg md:text-xl mb-3 md:mb-4"><Target size={20} /> {t.curriculum.headers.activity}</h4>
+                              <p className="text-xs md:text-base text-slate-600 leading-relaxed font-light bg-pink-50/30 p-4 md:p-6 rounded-2xl border border-pink-50">{selectedCourse.activity}</p>
+                           </section>
+                        </div>
+                        <div className="space-y-6 md:space-y-8">
+                           <div className="bg-slate-50 p-4 md:p-6 rounded-[2rem] border border-slate-100">
+                              <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 md:mb-4 flex items-center gap-2"><Clock size={14} /> Timeline</h4>
+                              <div className="space-y-2 md:space-y-3">
+                                 {selectedCourse.timeline.map((item, i) => (
+                                    <div key={i} className="flex items-center gap-2 md:gap-3 text-[10px] md:text-sm text-slate-500 font-medium"><div className="w-1.5 h-1.5 rounded-full bg-blue-400"></div>{item}</div>
+                                 ))}
+                              </div>
+                           </div>
+                           <div className="bg-amber-50 p-4 md:p-6 rounded-[2rem] border border-amber-100 relative overflow-hidden">
+                              <Lightbulb size={32} className="absolute top-0 right-0 p-1 text-amber-200/50" strokeWidth={3} />
+                              <h4 className="text-amber-600 font-bold text-xs md:text-base mb-1.5 md:mb-2 relative z-10 flex items-center gap-2"><Info size={14} /> {t.curriculum.headers.tip}</h4>
+                              <p className="text-amber-700/80 text-[10px] md:text-sm italic relative z-10">"{selectedCourse.tip}"</p>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+             )}
+          </main>
+        )}
+      </div>
+
+      {/* Responsive Footer */}
+      <footer className="py-12 md:py-20 px-6 md:px-10 border-t border-slate-50 bg-white mt-12">
+         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8 md:gap-12 text-center md:text-left">
+            <div className="flex items-center gap-4 md:gap-6">
+               <div className="w-12 h-12 md:w-14 md:h-14 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-500 shadow-xl shadow-blue-100"><Navigation size={24} /></div>
+               <div>
+                  <span className="school-title text-2xl md:text-3xl text-blue-400">Codelift Academy</span>
+                  <p className="text-slate-400 text-sm md:text-lg mt-1 font-light italic">Learning to Fly.</p>
+               </div>
+            </div>
+            <p className="text-slate-300 text-[10px] md:text-xs">© 2024 Codelift Academy. Created with Love for the Future.</p>
+            <div className="flex gap-4 md:gap-8">
+               {[<Globe size={20}/>, <Cpu size={20}/>, <Terminal size={20}/>].map((icon, i) => (
+                 <div key={i} className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 hover:text-blue-500 transition-all cursor-pointer hover:bg-blue-50">{icon}</div>
+               ))}
+            </div>
+         </div>
+      </footer>
+    </div>
+  );
+};
+
+export default App;
