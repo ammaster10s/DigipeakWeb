@@ -7,15 +7,52 @@
 }
 
 @layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    overflow-x: hidden;
+  }
+
   body {
     @apply antialiased text-slate-700 bg-white min-h-screen;
     font-family: var(--font-itim);
+    overflow-x: hidden;
+  }
+
+  button,
+  a,
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  span,
+  div {
+    overflow-wrap: anywhere;
+  }
+
+  button:focus-visible,
+  a:focus-visible {
+    outline: 3px solid rgb(96 165 250 / 0.55);
+    outline-offset: 3px;
   }
 }
 
 @layer utilities {
   .school-title {
     font-family: var(--font-school);
+  }
+
+  .scrollbar-hide {
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
   }
 }
 
